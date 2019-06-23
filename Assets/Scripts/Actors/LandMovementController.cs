@@ -15,7 +15,7 @@ public class LandMovementController : PhysicsObject
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Collider2D thisCollider;
-    private PlayerInputHandler inputHandler;
+    private PlayerCharacterController inputHandler;
 
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
@@ -26,7 +26,7 @@ public class LandMovementController : PhysicsObject
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<Collider2D>();
-        inputHandler = GetComponent<PlayerInputHandler>();
+        inputHandler = GetComponent<PlayerCharacterController>();
     }
 
     public void SetMove(Vector2 move) => this.move = move;

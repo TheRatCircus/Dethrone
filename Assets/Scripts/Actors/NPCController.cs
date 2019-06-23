@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class NPCController : MonoBehaviour
+public class NPCController : Actor
 {
     public GameObject target;
     private TargettingController targettingController;

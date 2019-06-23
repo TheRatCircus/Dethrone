@@ -29,7 +29,7 @@ public class HUDHandler : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        healthCounter.text = "Health: " + playerHealth._health;
+        healthCounter.text = $"Health: {playerHealth._health:F0}";
         dodgeChargeCounter.text = "Dodges: " + dodgeScript.DodgeCharges;
         tonicCounter.text = "Tonics: " + playerTonic.TonicCount;
         manaCounter.text = $"Mana: {manaScript._mana:F0}";

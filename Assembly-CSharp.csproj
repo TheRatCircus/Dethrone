@@ -62,17 +62,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Actors\Actor.cs" />
     <Compile Include="Assets\Scripts\Actors\DodgeController.cs" />
     <Compile Include="Assets\Scripts\Actors\Health.cs" />
     <Compile Include="Assets\Scripts\Actors\LandMovementController.cs" />
     <Compile Include="Assets\Scripts\Actors\Mana.cs" />
     <Compile Include="Assets\Scripts\Actors\NPCController.cs" />
-    <Compile Include="Assets\Scripts\Actors\Player\PlayerInputHandler.cs" />
+    <Compile Include="Assets\Scripts\Actors\Player\PlayerCharacterController.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\Weapon.cs" />
     <Compile Include="Assets\Scripts\Actors\TalentController.cs" />
     <Compile Include="Assets\Scripts\Actors\TargettingController.cs" />
     <Compile Include="Assets\Scripts\Actors\Tonic.cs" />
-    <Compile Include="Assets\Scripts\Augment.cs" />
+    <Compile Include="Assets\Scripts\Augments\Augment.cs" />
     <Compile Include="Assets\Scripts\CrosshairCollide.cs" />
     <Compile Include="Assets\Scripts\DamagePopup.cs" />
     <Compile Include="Assets\Scripts\DeadzoneCamera.cs" />

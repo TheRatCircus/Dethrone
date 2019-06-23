@@ -38,7 +38,7 @@ public class Mana : MonoBehaviour
             mana -= manaCost;
         } else
         {
-            health.modHealth(-manaCost);
+            health.ModifyHealth(-manaCost);
         }
         
     }

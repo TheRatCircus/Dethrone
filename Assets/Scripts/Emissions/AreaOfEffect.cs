@@ -71,7 +71,7 @@ namespace Dethrone.Emissions
 
         private void DamageActor(Health health)
         {
-            health.modHealth(-damage);
+            health.ModifyHealth(-damage);
         }
 
         // Destroy this area of effect
