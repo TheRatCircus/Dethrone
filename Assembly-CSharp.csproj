@@ -76,7 +76,6 @@
     <Compile Include="Assets\Scripts\Augments\Augment.cs" />
     <Compile Include="Assets\Scripts\CrosshairCollide.cs" />
     <Compile Include="Assets\Scripts\DamagePopup.cs" />
-    <Compile Include="Assets\Scripts\DeadzoneCamera.cs" />
     <Compile Include="Assets\Scripts\Emissions\AreaOfEffect.cs" />
     <Compile Include="Assets\Scripts\Emissions\Slash.cs" />
     <Compile Include="Assets\Scripts\FollowCameraController.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="Assets\Scripts\Menu\CharacterMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
     <Compile Include="Assets\Scripts\Module.cs" />
-    <Compile Include="Assets\Scripts\PerfectPixel.cs" />
     <Compile Include="Assets\Scripts\PhysicsObject.cs" />
     <Compile Include="Assets\Scripts\PopupManager.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />

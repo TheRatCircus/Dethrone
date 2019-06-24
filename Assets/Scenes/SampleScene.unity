@@ -1912,7 +1912,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupManager: {fileID: 1347632549}
-  healthMax: 40
 --- !u!114 &1539219262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3972,12 +3971,12 @@ GameObject:
   - component: {fileID: 2085599656}
   - component: {fileID: 2085599658}
   - component: {fileID: 2085599663}
+  - component: {fileID: 2085599664}
   - component: {fileID: 2085599655}
   - component: {fileID: 2085599660}
   - component: {fileID: 2085599661}
   - component: {fileID: 2085599659}
   - component: {fileID: 2085599662}
-  - component: {fileID: 2085599664}
   - component: {fileID: 2085599665}
   - component: {fileID: 2085599657}
   m_Layer: 8
@@ -4064,33 +4063,9 @@ MonoBehaviour:
   minGroundNormalY: 0.65
   gravityModifier: 1
   isGravitating: 1
-  targetVelocity: {x: 0, y: 0}
-  grounded: 0
-  groundNormal: {x: 0, y: 0}
-  rb2d: {fileID: 0}
-  velocity: {x: 0, y: 0}
-  contactFilter:
-    useTriggers: 0
-    useLayerMask: 0
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      m_Bits: 0
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
   maxSpeed: 7
   jumpTakeOffSpeed: 7
-  move: {x: 0, y: 0}
-  isJumping: 0
   crosshair: {fileID: 659974581}
-  spriteRenderer: {fileID: 0}
-  animator: {fileID: 0}
-  thisCollider: {fileID: 0}
-  inputHandler: {fileID: 0}
 --- !u!50 &2085599656
 Rigidbody2D:
   serializedVersion: 4
@@ -4188,7 +4163,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupManager: {fileID: 1347632549}
-  healthMax: 100
 --- !u!114 &2085599662
 MonoBehaviour:
   m_ObjectHideFlags: 0

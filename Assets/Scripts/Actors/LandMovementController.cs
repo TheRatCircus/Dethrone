@@ -8,6 +8,7 @@ public class LandMovementController : PhysicsObject
     public float jumpTakeOffSpeed = 7;
 
     private Vector2 move;
+    private float moveInput;
     private bool isJumping;
 
     public GameObject crosshair;
@@ -15,50 +16,51 @@ public class LandMovementController : PhysicsObject
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Collider2D thisCollider;
-    private PlayerCharacterController inputHandler;
+    private Actor actorController;
 
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
 
-    // Use this for initialization
-    void Awake()
+    void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<Collider2D>();
-        inputHandler = GetComponent<PlayerCharacterController>();
+        if (transform.tag == "Player")
+        {
+            actorController = GetComponent<PlayerCharacterController>();
+        }
+        else
+        {
+            actorController = GetComponent<NPCController>();
+        }
     }
 
-    public void SetMove(Vector2 move) => this.move = move;
+    // Set the current horizontal move. Call every frame
+    public void SetMove(float moveX) => this.moveInput = moveX;
 
-    public void SetMove(float moveX, float moveY)
-    {
-        move.x = moveX;
-        move.y = moveY;
-    }
-
+    // Set whether or not character is jumping. Call every frame
     public void SetJumping(bool isJumping)
     {
         this.isJumping = isJumping;
     }
 
+    //
     protected override void ComputeVelocity()
     {
-        move = Vector2.zero;
+        // Start move at zero, then feed input from external controller
+        Vector2 move = Vector2.zero;
+        move.x = moveInput;
 
-        move.x = Input.GetAxis("Horizontal");
-
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (isJumping && grounded)
         {
             velocity.y = jumpTakeOffSpeed;
         }
-        // TODO: Double jumping
-        //else if (Input.GetButtonDown("Jump") && !grounded && )
-        else if (Input.GetButtonUp("Jump"))
+        else if (isJumping)
         {
             if (velocity.y > 0)
             {
-                velocity.y = velocity.y * 0.5f;
+                velocity.y *= 0.5f;
             }
         }
 
@@ -75,6 +77,7 @@ public class LandMovementController : PhysicsObject
         targetVelocity = move * maxSpeed;
     }
 
+    //
     protected override void Movement(Vector2 move, bool yMovement)
     {
         float distance = move.magnitude;
