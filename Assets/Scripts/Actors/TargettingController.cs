@@ -20,12 +20,15 @@ public class TargettingController : MonoBehaviour
     // Ray oriented to direction of player aim and relevant vars
     private Ray2D aimRay;
     public Ray2D AimRay { get => aimRay; }
+    private Vector2 aimDirection;
+    public Vector2 AimDirection { get => aimDirection; set => aimDirection = value; }
     private Quaternion aimRotation;
     public Quaternion AimRotation { get => aimRotation; }
 
     // First area of ground beneath the point-cast pointer
     private Vector2 groundPointer;
     public Vector2 GroundPointer { get => groundPointer; }
+    
 
     // Use this for initialization
     void Start()
@@ -41,6 +44,7 @@ public class TargettingController : MonoBehaviour
     {
         HandleGroundPointer();
         HandleAimRay();
+        HandleAimDirection();
         HandleAimRotation();
         HandlePointCastPointer();
     }
@@ -89,6 +93,11 @@ public class TargettingController : MonoBehaviour
         aimRay.direction = globalPointer - (Vector2)transform.position;
     }
 
+    private void HandleAimDirection()
+    {
+        aimDirection = (aimRay.GetPoint(1) - (Vector2)transform.position).normalized;
+    }
+
     // Handle aimRotation
     private void HandleAimRotation()
     {
@@ -108,9 +117,11 @@ public class TargettingController : MonoBehaviour
         Gizmos.DrawSphere(globalPointer, 0.2f);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(aimRay.origin, aimRay.direction);
+        Gizmos.DrawSphere(aimDirection, 0.2f);
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(GroundPointer, 0.2f);
         Gizmos.color = Color.green;
+        Gizmos.DrawSphere(GetOrbitPoint(1.5f), 0.2f);
         Gizmos.color = Color.blue;
         Gizmos.DrawSphere(pointCastPointer, 0.1f);
     }

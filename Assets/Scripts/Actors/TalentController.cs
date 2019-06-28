@@ -27,8 +27,9 @@ public class TalentController : MonoBehaviour
         actorHealth = GetComponent<Health>();
 
         // TEMPORARY
-        primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>() };
+        primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>(), ScriptableObject.CreateInstance<Impel>() };
         primaryTalents[0].Initialize(targettingController, this);
+        primaryTalents[1].Initialize(targettingController, this);
     }
 
     // Catch input attempting to cast a Talent

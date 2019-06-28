@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 // Any area of effect cast via a Talent, damaging or otherwise
 namespace Dethrone.Emissions
@@ -14,7 +12,7 @@ namespace Dethrone.Emissions
         private bool dealsKnockback;
 
         // Numeric properties
-        private float damage;
+        protected float damage;
 
         // Status vars
         private bool isActive;
@@ -43,6 +41,7 @@ namespace Dethrone.Emissions
             animator.SetBool("isTelegraphing", isTelegraphing);
         }
 
+        // Call on instantiation to pass Talent behaviour to this AOE
         public virtual void Initialize(float damage)
         {
             this.damage = damage;
@@ -60,7 +59,7 @@ namespace Dethrone.Emissions
             transform.GetComponent<Collider2D>().isTrigger = isTrigger;
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        protected void OnTriggerEnter2D(Collider2D collision)
         {
             transform.GetComponent<Collider2D>().isTrigger = false;
             if (collision.tag == "Enemy")
@@ -69,7 +68,7 @@ namespace Dethrone.Emissions
             }
         }
 
-        private void DamageActor(Health health)
+        protected void DamageActor(Health health)
         {
             health.ModifyHealth(-damage);
         }

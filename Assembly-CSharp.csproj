@@ -73,21 +73,24 @@
     <Compile Include="Assets\Scripts\Actors\TalentController.cs" />
     <Compile Include="Assets\Scripts\Actors\TargettingController.cs" />
     <Compile Include="Assets\Scripts\Actors\Tonic.cs" />
-    <Compile Include="Assets\Scripts\Augments\Augment.cs" />
     <Compile Include="Assets\Scripts\CrosshairCollide.cs" />
     <Compile Include="Assets\Scripts\DamagePopup.cs" />
     <Compile Include="Assets\Scripts\Emissions\AreaOfEffect.cs" />
+    <Compile Include="Assets\Scripts\Emissions\Impel.cs" />
+    <Compile Include="Assets\Scripts\Emissions\Projectile.cs" />
     <Compile Include="Assets\Scripts\Emissions\Slash.cs" />
     <Compile Include="Assets\Scripts\FollowCameraController.cs" />
     <Compile Include="Assets\Scripts\HUDHandler.cs" />
+    <Compile Include="Assets\Scripts\Init.cs" />
     <Compile Include="Assets\Scripts\Menu\CharacterMenu.cs" />
     <Compile Include="Assets\Scripts\Menu\PauseMenu.cs" />
-    <Compile Include="Assets\Scripts\Module.cs" />
+    <Compile Include="Assets\Scripts\Modules\Augments\Augment.cs" />
+    <Compile Include="Assets\Scripts\Modules\Module.cs" />
+    <Compile Include="Assets\Scripts\Modules\Talents\Impel.cs" />
+    <Compile Include="Assets\Scripts\Modules\Talents\Slash.cs" />
+    <Compile Include="Assets\Scripts\Modules\Talents\Talent.cs" />
     <Compile Include="Assets\Scripts\PhysicsObject.cs" />
     <Compile Include="Assets\Scripts\PopupManager.cs" />
-    <Compile Include="Assets\Scripts\Projectile.cs" />
-    <Compile Include="Assets\Scripts\Talents\Slash.cs" />
-    <Compile Include="Assets\Scripts\Talents\Talent.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Misc/Development/Dethrone/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
