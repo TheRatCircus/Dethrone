@@ -1988,6 +1988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupManager: {fileID: 1347632549}
+  HealthMax: 40
 --- !u!114 &1539219262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4273,6 +4274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   popupManager: {fileID: 1347632549}
+  HealthMax: 100
 --- !u!114 &2085599662
 MonoBehaviour:
   m_ObjectHideFlags: 0

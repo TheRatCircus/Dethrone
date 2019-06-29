@@ -9,16 +9,15 @@ public class Health : MonoBehaviour
     // Numeric fields
     private float health;
     public float _health { get => health; set => health = value; }
-    private float healthMax;
-    public float HealthMax { get => healthMax; set => healthMax = value; }
+    public float HealthMax;
     private float healthPerSecond;
 
     // Start is called before the first frame update
     void Start()
     {
         popupManager = GameObject.Find("Managers").GetComponent<PopupManager>();
-        healthMax = 100f;
-        health = healthMax;
+        HealthMax = 100f;
+        health = HealthMax;
     }
 
     void Update()
