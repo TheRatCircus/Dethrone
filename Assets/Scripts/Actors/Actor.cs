@@ -5,6 +5,9 @@ public class Actor : MonoBehaviour
 {
     protected string actorName;
 
+    // Status vars
     protected bool canCharacterAction;
     public bool CanCharacterAction { get => canCharacterAction; set => canCharacterAction = value; }
+    protected bool isImmuneToHit;
+    public bool IsImmuneToHit { get => isImmuneToHit; set => isImmuneToHit = value; }
 }

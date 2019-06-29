@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 // Central handling for all player input
 public class PlayerCharacterController : Actor
@@ -84,9 +83,54 @@ public class PlayerCharacterController : Actor
     // Catch input activating dodge
     public void DodgeInput()
     {
+        (int dodgeX, int dodgeY) dodgeAxes;
+
+        // Check vertical first
+        if (Input.GetAxis("Vertical") > 0)
+        {
+            dodgeAxes.dodgeY = 1;
+        }
+        else if (Input.GetAxis("Vertical") < 0)
+        {
+            dodgeAxes.dodgeY = -1;
+        }
+        else
+        {
+            dodgeAxes.dodgeY = 0;
+        }
+
+        // If not dodging vertically, default is backstep
+        if (dodgeAxes.dodgeY == 0)
+        {
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+                dodgeAxes.dodgeX = 1;
+            }
+            else
+            {
+                dodgeAxes.dodgeX = -1;
+            }
+        }
+        // If dodging vertically, allow a non-horizontal dodge
+        else
+        {
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+                dodgeAxes.dodgeX = 1;
+            }
+            else if (Input.GetAxis("Horizontal") < 0)
+            {
+                dodgeAxes.dodgeX = -1;
+            }
+            else
+            {
+                dodgeAxes.dodgeX = 0;
+            }
+        }
+        playerDodge.SetDodgeDirection(dodgeAxes);
         if (Input.GetButtonDown("Dodge"))
         {
-            playerDodge.Dodge();
+            playerDodge.TryDodge();
         }
     }
 
@@ -99,7 +143,7 @@ public class PlayerCharacterController : Actor
         }
     }
 
-    // On cast input, check if secondary input is coming in
+    // Send talent input to TalentController
     public void TalentInput()
     {
         bool secondaryInput = false;

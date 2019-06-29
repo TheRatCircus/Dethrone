@@ -11,12 +11,10 @@ public class LandMovementController : PhysicsObject
     private float moveInput;
     private bool isJumping;
 
-    public GameObject crosshair;
-
+    private TargettingController targettingController;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private Collider2D thisCollider;
-    private Actor actorController;
 
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
@@ -26,14 +24,7 @@ public class LandMovementController : PhysicsObject
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<Collider2D>();
-        if (transform.tag == "Player")
-        {
-            actorController = GetComponent<PlayerCharacterController>();
-        }
-        else
-        {
-            actorController = GetComponent<NPCController>();
-        }
+        targettingController = GetComponent<TargettingController>();
     }
 
     // Set the current horizontal move. Call every frame
@@ -65,7 +56,7 @@ public class LandMovementController : PhysicsObject
         }
 
         bool flipSprite = 
-        (spriteRenderer.flipX ? (crosshair.transform.position.x > transform.position.x) : (crosshair.transform.position.x < transform.position.x));
+        (spriteRenderer.flipX ? (targettingController.GlobalPointer.x > transform.position.x) : (targettingController.GlobalPointer.x < transform.position.x));
         if (flipSprite)
         {
             spriteRenderer.flipX = !spriteRenderer.flipX;
@@ -132,8 +123,14 @@ public class LandMovementController : PhysicsObject
                 if (stepBufferList[i].collider.ClosestPoint(stepBufferList[i].centroid).y < stepBufferList[i].centroid.y
                     && stepBufferList[i].normal.y < minGroundNormalY)
                 {
+                    // Get the y distance between the centroid of the hit
+                    // collider and the closest point of the hit collider
+                    // to that centroid
                     float centroidToClosest = stepBufferList[i].centroid.y - stepBufferList[i].collider.ClosestPoint(stepBufferList[i].centroid).y;
+                    // The distance which the actor steps is its own size - 
+                    // centroidToClosest - its collider's own extents
                     float stepDistance = thisCollider.bounds.size.y - centroidToClosest - thisCollider.bounds.extents.y;
+                    // Move the actor up by stepDistance
                     transform.Translate(move.x != 0 && move.x > 0 ? 0.01f : -0.01f, stepDistance, 0, Space.Self);
                 }
             }

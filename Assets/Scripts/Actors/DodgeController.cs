@@ -1,60 +1,159 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DodgeController : MonoBehaviour
 {
-    public GameObject dodgeCrosshair;
-    private CrosshairCollide collideHandler;
+    private Actor actor;
     private TargettingController targettingController;
+    private SpriteRenderer spriteRenderer;    
+    private Collider2D thisCollider;
+    private Rigidbody2D rb2d;
+    private Mana mana;
 
-    private int dodgeCharges;
-    private int dodgeChargesMax;
-    public int DodgeCharges { get => dodgeCharges; }
-    public int DodgeChargesMax { get => dodgeChargesMax; set => dodgeChargesMax = value; }
+    private Vector2 dodgeDirection;
+    private Vector2 dodgeDestination;
+    private ContactFilter2D contactFilter;
 
+    private float dodgeManaCost;
+    //private int dodgeCharges;
+    //private int dodgeChargesMax;
+    //public int DodgeCharges { get => dodgeCharges; }
+    //public int DodgeChargesMax { get => dodgeChargesMax; set => dodgeChargesMax = value; }
+
+    private bool isDodging;
     private bool isRecovering;
+    private Vector2 currentVelocity;
+
+    private void Awake()
+    {
+        dodgeManaCost = 34f;
+        //dodgeChargesMax = 3;
+        //dodgeCharges = dodgeChargesMax;
+    }
 
     private void Start()
     {
-        collideHandler = dodgeCrosshair.GetComponent<CrosshairCollide>();
         targettingController = GetComponent<TargettingController>();
+        thisCollider = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb2d = GetComponent<Rigidbody2D>();
+        mana = GetComponent<Mana>();
 
-        dodgeChargesMax = 3;
-        dodgeCharges = dodgeChargesMax;
+        if (transform.tag == "Player")
+        {
+            actor = GetComponent<PlayerCharacterController>();
+        }
+        else
+        {
+            actor = GetComponent<NPCController>();
+        }
+
+        contactFilter.useTriggers = false;
+        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
+        contactFilter.useLayerMask = true;
+
+        
+        isDodging = false;
     }
 
     private void Update()
     {
-        MoveCrosshair();
+        if (isDodging)
+        {
+            //transform.Translate(dodgeDirection * 4.0f * Time.deltaTime, Space.Self);
+            rb2d.position = Vector2.SmoothDamp(transform.position, dodgeDestination, ref currentVelocity, 0.09f);
+        }
     }
 
-    public void Dodge()
+    public void SetDodgeDirection((int dodgeX, int dodgeY) dodgeAxes)
     {
-        if (!collideHandler.GetIsColliding() && dodgeCharges > 0)
+        if (!isDodging)
         {
-            GetComponent<Rigidbody2D>().position = dodgeCrosshair.transform.position;
-            dodgeCharges--;
-            if (!isRecovering)
+            dodgeDirection.x = dodgeAxes.dodgeX;
+            dodgeDirection.y = dodgeAxes.dodgeY;
+        }
+
+        SetDodgeDestination();
+    }
+
+    private void SetDodgeDestination()
+    {
+        if (!isDodging)
+        {
+            RaycastHit2D[] dodgeCollideBuffer = new RaycastHit2D[16];
+            Ray2D ray = new Ray2D(transform.position, dodgeDirection);
+            int collideBufferCount = thisCollider.Cast(dodgeDirection, contactFilter, dodgeCollideBuffer, 3.0f);
+
+            //StartCoroutine(Dodge());
+
+            if (collideBufferCount > 0)
             {
-                StartCoroutine("RecoverCharges");
+                dodgeDestination = ray.GetPoint(dodgeCollideBuffer[0].distance - 0.05f);
+            }
+            else
+            {
+                dodgeDestination = ray.GetPoint(3.0f);
             }
         }
     }
 
-    IEnumerator RecoverCharges()
+    public void TryDodge()
     {
-        isRecovering = true;
-        while (dodgeCharges < dodgeChargesMax)
+        //if (!collideHandler.GetIsColliding() && dodgeCharges > 0)
+        //{
+        //    GetComponent<Rigidbody2D>().position = dodgeCrosshair.transform.position;
+        //    dodgeCharges--;
+        //    if (!isRecovering)
+        //    {
+        //        StartCoroutine("RecoverCharges");
+        //    }
+        //}
+
+        //RaycastHit2D[] dodgeCollideBuffer = new RaycastHit2D[16];
+        //Ray2D ray = new Ray2D(transform.position, dodgeDirection);
+        //int collideBufferCount = thisCollider.Cast(dodgeDirection, contactFilter, dodgeCollideBuffer, 3.0f);
+
+        if (mana._mana >= dodgeManaCost)
         {
-            yield return new WaitForSeconds(1.0f);
-            dodgeCharges++;
+            mana.ModifyMana(-dodgeManaCost, false);
+            StartCoroutine(Dodge());
         }
-        isRecovering = false;
+        else
+        {
+            Debug.Log("Insufficient mana to dodge.");
+        }
+
+        //if (collideBufferCount > 0)
+        //{
+        //    rb2d.position = ray.GetPoint(dodgeCollideBuffer[0].distance);
+        //}
+        //else
+        //{
+        //    rb2d.position = ray.GetPoint(3.0f);
+        //}
     }
 
-    private void MoveCrosshair()
+    IEnumerator Dodge()
     {
-        dodgeCrosshair.transform.position = targettingController.AimRay.GetPoint(3.0f);
+        actor.CanCharacterAction = false;
+        isDodging = true;
+        actor.IsImmuneToHit = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        isDodging = false;
+        actor.IsImmuneToHit = false;
+        actor.CanCharacterAction = true;
     }
+
+    //IEnumerator RecoverCharges()
+    //{
+    //    isRecovering = true;
+    //    while (dodgeCharges < dodgeChargesMax)
+    //    {
+    //        yield return new WaitForSeconds(1.0f);
+    //        dodgeCharges++;
+    //    }
+    //    isRecovering = false;
+    //}
 }

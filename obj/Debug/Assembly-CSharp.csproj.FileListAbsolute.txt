@@ -224,4 +224,3 @@ D:\Misc\Development\Dethrone\Temp\bin\Debug\UnityEditor.SpatialTracking.pdb
 D:\Misc\Development\Dethrone\Temp\bin\Debug\UnityEngine.SpatialTracking.pdb
 D:\Misc\Development\Dethrone\Temp\bin\Debug\UnityEditor.XR.LegacyInputHelpers.pdb
 D:\Misc\Development\Dethrone\Temp\bin\Debug\com.unity.multiplayer-hlapi.Runtime.pdb
-D:\Misc\Development\Dethrone\Temp\bin\Debug\Assembly-CSharp.dll.CodeAnalysisLog.xml
