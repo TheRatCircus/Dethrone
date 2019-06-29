@@ -8,13 +8,13 @@ public class TalentController : MonoBehaviour
     protected TargettingController targettingController;
     protected Mana actorMana;
     protected Health actorHealth;
+    protected Animator animator;
 
     // Talent sets
     private Talent[] primaryTalents;
     private Talent[] secondaryTalents;
 
     // Status vars
-    private int castAnimation;
     private bool isTelegraphing;
     private bool isActive;
     private bool isCasting;
@@ -25,11 +25,18 @@ public class TalentController : MonoBehaviour
         targettingController = GetComponent<TargettingController>();
         actorMana = GetComponent<Mana>();
         actorHealth = GetComponent<Health>();
+        animator = GetComponent<Animator>();
 
         // TEMPORARY
         primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>(), ScriptableObject.CreateInstance<Impel>() };
         primaryTalents[0].Initialize(targettingController, this);
         primaryTalents[1].Initialize(targettingController, this);
+    }
+
+    private void Update()
+    {
+        animator.SetBool("isTelegraphing", isTelegraphing);
+        animator.SetBool("isCasting", isCasting);
     }
 
     // Catch input attempting to cast a Talent
@@ -68,7 +75,7 @@ public class TalentController : MonoBehaviour
     // Finally go through the process of casting the talent
     public void CastTalent(Talent talent)
     {
-        castAnimation = talent._castAnimation;
+        animator.SetInteger("castAnimation", talent._castAnimation);
         StartCoroutine(talent.Cast());
         actorMana.ModifyMana(-talent.ManaCost, talent.CostsHealth);
     }
