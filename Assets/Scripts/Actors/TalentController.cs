@@ -70,7 +70,7 @@ public class TalentController : MonoBehaviour
     {
         castAnimation = talent._castAnimation;
         StartCoroutine(talent.Cast());
-        actorMana.ConsumeMana(talent.ManaCost, talent.CostsHealth);
+        actorMana.ModifyMana(-talent.ManaCost, talent.CostsHealth);
     }
 
     public void SetStatus(bool isActive, bool isTelegraphing, bool isCasting)
