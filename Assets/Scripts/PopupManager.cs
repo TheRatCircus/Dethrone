@@ -14,6 +14,12 @@ public class PopupManager : MonoBehaviour
     void Start()
     {
         damagePopupPrefab = (Text)Resources.Load("Prefabs/DamagePopup", typeof(Text));
+
+        Health[] healths = (Health[])Resources.FindObjectsOfTypeAll(typeof(Health));
+        foreach (Health health in healths)
+        {
+            health.OnHealthChangeEvent += HealthChangePopup;
+        }
     }
 
     // Update is called once per frame
@@ -22,9 +28,21 @@ public class PopupManager : MonoBehaviour
         
     }
 
-    public void DamagePopup(float damage, Transform target)
+    public void HealthChangePopup(float healthChange, Transform target)
     {
         Text popupText = Instantiate(damagePopupPrefab, target.position, new Quaternion(0, 0, 0, 0), canvas.transform);
-        popupText.text = (-damage).ToString();
+        popupText.text = (-healthChange).ToString();
+        if (healthChange == 0)
+        {
+            popupText.color = Color.grey;
+        }
+        else if (healthChange < 0)
+        {
+            popupText.color = Color.red;
+        }
+        else
+        {
+            popupText.color = Color.green;
+        }
     }
 }
