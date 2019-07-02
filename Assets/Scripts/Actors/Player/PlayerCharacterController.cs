@@ -10,7 +10,7 @@ public class PlayerCharacterController : Actor
     // Scripts receiving input
     private TargettingController targettingController;
     private DodgeController playerDodge;
-    private TalentController playerTalentController;
+    private PlayerTalentController playerTalentController;
     private LandMovementController playerMovementController;
     private Tonic tonic;
 
@@ -27,7 +27,7 @@ public class PlayerCharacterController : Actor
 
         targettingController = GetComponent<TargettingController>();
         playerDodge = GetComponent<DodgeController>();
-        playerTalentController = GetComponent<TalentController>();
+        playerTalentController = GetComponent<PlayerTalentController>();
         playerMovementController = GetComponent<LandMovementController>();
         tonic = GetComponent<Tonic>();
 

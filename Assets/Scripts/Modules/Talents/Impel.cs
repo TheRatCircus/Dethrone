@@ -25,19 +25,16 @@ namespace Dethrone.Talents
         {
             isActive = true;
             isTelegraphing = true;
-            talentController.SetStatus(true, true, false);
             yield return new WaitForSeconds(telegraphTime);
 
             isTelegraphing = false;
             isCasting = true;
-            talentController.SetStatus(true, false, true);
             CastEffect();
             impelProj.SetProjectileIsTrigger(true);
             yield return new WaitForSeconds(castingTime);
 
             isCasting = false;
             isActive = false;
-            talentController.SetStatus(false, false, false);
         }
 
         protected override void CastEffect()

@@ -68,9 +68,10 @@
     <Compile Include="Assets\Scripts\Actors\LandMovementController.cs" />
     <Compile Include="Assets\Scripts\Actors\Mana.cs" />
     <Compile Include="Assets\Scripts\Actors\NPCController.cs" />
+    <Compile Include="Assets\Scripts\Actors\NPCs\Marauder.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\PlayerCharacterController.cs" />
+    <Compile Include="Assets\Scripts\Actors\Player\PlayerTalentController.cs" />
     <Compile Include="Assets\Scripts\Actors\Player\Weapon.cs" />
-    <Compile Include="Assets\Scripts\Actors\TalentController.cs" />
     <Compile Include="Assets\Scripts\Actors\TargettingController.cs" />
     <Compile Include="Assets\Scripts\Actors\Tonic.cs" />
     <Compile Include="Assets\Scripts\CrosshairCollide.cs" />

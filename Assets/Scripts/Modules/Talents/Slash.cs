@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Dethrone.Talents
@@ -26,13 +27,11 @@ namespace Dethrone.Talents
             isActive = true;
             CastEffect();
             isTelegraphing = true;
-            talentController.SetStatus(true, true, false);
             slashAOE.SetStatus(true, true, false);
             yield return new WaitForSeconds(telegraphTime);
 
             isTelegraphing = false;
             isCasting = true;
-            talentController.SetStatus(true, false, true);
             slashAOE.SetStatus(true, false, true);
             slashAOE.SetAOEIsTrigger(true);
             yield return new WaitForSeconds(castingTime);
@@ -41,7 +40,6 @@ namespace Dethrone.Talents
             isActive = false;
             slashAOE.SetStatus(false, false, false);
             slashAOE.DestroyAOE();
-            talentController.SetStatus(false, false, false);
         }
 
         protected override void CastEffect()

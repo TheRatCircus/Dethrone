@@ -4,6 +4,8 @@ ScriptsOnlyBuild:
     - CrosshairCollide
     - DamagePopup
     - Dethrone.Emissions.AreaOfEffect
+    - Dethrone.Emissions.Impel
+    - Dethrone.Emissions.Projectile
     - Dethrone.Emissions.Slash
     - DodgeController
     - FollowCameraController
@@ -14,11 +16,16 @@ ScriptsOnlyBuild:
     - NPCController
     - PauseMenu
     - PlayerCharacterController
+    - PlayerTalentController
     - PopupManager
-    - Projectile
-    - TalentController
     - TargettingController
     - Tonic
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
@@ -92,59 +99,61 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 9334}
     - Class: 114
-      Script: {instanceID: 9374}
+      Script: {instanceID: 9376}
     - Class: 114
-      Script: {instanceID: 9392}
-    - Class: 114
-      Script: {instanceID: 9424}
+      Script: {instanceID: 9394}
     - Class: 114
       Script: {instanceID: 9426}
     - Class: 114
-      Script: {instanceID: 9432}
+      Script: {instanceID: 9428}
     - Class: 114
-      Script: {instanceID: 9438}
+      Script: {instanceID: 9434}
     - Class: 114
-      Script: {instanceID: 9446}
+      Script: {instanceID: 9440}
     - Class: 114
-      Script: {instanceID: 9482}
+      Script: {instanceID: 9448}
     - Class: 114
       Script: {instanceID: 9484}
     - Class: 114
-      Script: {instanceID: 9494}
+      Script: {instanceID: 9486}
     - Class: 114
-      Script: {instanceID: 9706}
+      Script: {instanceID: 9496}
     - Class: 114
-      Script: {instanceID: 9756}
+      Script: {instanceID: 9708}
     - Class: 114
-      Script: {instanceID: 9828}
+      Script: {instanceID: 9758}
     - Class: 114
-      Script: {instanceID: 9872}
+      Script: {instanceID: 9830}
     - Class: 114
       Script: {instanceID: 9874}
     - Class: 114
-      Script: {instanceID: 10010}
+      Script: {instanceID: 9876}
     - Class: 114
-      Script: {instanceID: 10144}
+      Script: {instanceID: 10012}
     - Class: 114
-      Script: {instanceID: 10148}
+      Script: {instanceID: 10146}
     - Class: 114
-      Script: {instanceID: 10210}
+      Script: {instanceID: 10150}
     - Class: 114
-      Script: {instanceID: 10436}
+      Script: {instanceID: 10212}
     - Class: 114
-      Script: {instanceID: 10520}
+      Script: {instanceID: 10440}
     - Class: 114
-      Script: {instanceID: 10536}
+      Script: {instanceID: 10524}
     - Class: 114
-      Script: {instanceID: 10666}
+      Script: {instanceID: 10532}
     - Class: 114
-      Script: {instanceID: 10674}
+      Script: {instanceID: 10542}
     - Class: 114
-      Script: {instanceID: 10826}
+      Script: {instanceID: 10672}
     - Class: 114
-      Script: {instanceID: 10868}
+      Script: {instanceID: 10680}
     - Class: 114
-      Script: {instanceID: 10884}
+      Script: {instanceID: 10832}
+    - Class: 114
+      Script: {instanceID: 10874}
+    - Class: 114
+      Script: {instanceID: 10890}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -193,7 +202,7 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
-      Hash: 3f27b62d49e2b24dbb74ccc0866778e2
+      Hash: b4e8313b98744387e94a33e13f7f3f6a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LandMovementController
@@ -263,6 +272,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: GroupTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Init
   - hash:
       serializedVersion: 2
       Hash: a5781dc71a671b1ad2b38de19f24b71f
@@ -727,9 +742,9 @@ ScriptsOnlyBuild:
     className: TrackedPoseDriver
   - hash:
       serializedVersion: 2
-      Hash: c9098c4462f15a369d217da3d806780e
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
-    namespaceName: 
+    namespaceName: Dethrone.Emissions
     className: Projectile
   - hash:
       serializedVersion: 2
@@ -745,7 +760,7 @@ ScriptsOnlyBuild:
     className: AnalyticsTracker
   - hash:
       serializedVersion: 2
-      Hash: 6581ff059229fd8b07c1a7d91f7ffb8b
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DodgeController
@@ -841,7 +856,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAnimator
   - hash:
       serializedVersion: 2
-      Hash: cc40197a32f517b88796a921735841da
+      Hash: 7f7f0d536f5b2c5aa25af4cc5887a25b
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Health
@@ -853,7 +868,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: f77d3eac3e796d9ebd500a76327bf8b8
+      Hash: 6e5e6f51bd9423ad3704b6bc51746abd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: HUDHandler
@@ -887,6 +902,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: ActivationPlayableAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: Dethrone.Talents
+    className: Impel
   - hash:
       serializedVersion: 2
       Hash: 318c6c13a19c9fac98135ae14889de1b
@@ -973,6 +994,12 @@ ScriptsOnlyBuild:
     className: FollowCameraController
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: Dethrone.Emissions
+    className: Impel
+  - hash:
+      serializedVersion: 2
       Hash: 516824a435828eadd660ef2f1658a48e
     assemblyName: Unity.Analytics.DataPrivacy.dll
     namespaceName: UnityEngine.Analytics
@@ -982,7 +1009,7 @@ ScriptsOnlyBuild:
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: TalentController
+    className: PlayerTalentController
   - hash:
       serializedVersion: 2
       Hash: f336e086360abe49a3323e5f1583c35a
@@ -997,7 +1024,7 @@ ScriptsOnlyBuild:
     className: CrosshairCollide
   - hash:
       serializedVersion: 2
-      Hash: 66bca5cc6a18c5298ec75235e56a84d6
+      Hash: 029bbcc095c7c9876eec02df89d32e60
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NPCController
@@ -1091,12 +1118,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Init
   platform: 19
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

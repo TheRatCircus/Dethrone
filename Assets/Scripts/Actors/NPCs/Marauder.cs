@@ -1,0 +1,129 @@
+﻿using System.Collections;
+using UnityEngine;
+using Dethrone.Talents;
+
+public enum NPCState
+{
+    None,
+    Peaceful,
+    Patrolling,
+    WaitingForPlayer,
+    Combat
+}
+
+public enum EnemyState
+{
+    None,
+    Idle,
+    Moving,
+    Attacking
+}
+
+namespace Dethrone.NPCs
+{
+    public class Marauder : Actor
+    {
+        // Requisite scripts
+        protected TargettingController targettingController;
+        protected LandMovementController movementController;
+
+        protected Slash slash;
+
+        public GameObject target;
+        public float awareDistance;
+        public float attackRange;
+
+        protected NPCState npcState;
+        protected EnemyState enemyState;
+
+        protected bool isTelegraphing;
+        protected bool isCasting;
+
+        // Awake is called when the script instance is being loaded
+        protected void Awake()
+        {
+            npcState = NPCState.WaitingForPlayer;
+            enemyState = EnemyState.None;
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            movementController = GetComponent<LandMovementController>();
+            targettingController = GetComponent<TargettingController>();
+
+            if (target == null)
+            {
+                target = GameObject.FindGameObjectWithTag("Player");
+            }
+
+            slash = ScriptableObject.CreateInstance<Slash>();
+            slash.Initialize(targettingController);
+
+            StartCoroutine(ScanForTarget());
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (npcState == NPCState.Combat)
+            {
+                targettingController.CatchPointer(target.transform.position);
+                
+                if (enemyState == EnemyState.Moving)
+                {
+                    if (Vector2.Distance(target.transform.position, transform.position) < attackRange)
+                    {
+                        StartCoroutine(Attack());
+                    }
+                    else
+                    {
+                        movementController.SetMove(target.transform.position.x > transform.position.x ? 1 : -1);
+                    }
+                }
+            }
+        }
+
+        // Check if the target is detected
+        IEnumerator ScanForTarget()
+        {
+            while (npcState != NPCState.Combat)
+            {
+                yield return new WaitForSeconds(.25f);
+                LayerMask layerMask = (1 << 10) | (1 << 13);
+
+                float sqrDstToTarget = (target.transform.position - transform.position).sqrMagnitude;
+                if (sqrDstToTarget <= Mathf.Pow(awareDistance, 2))
+                {
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position - transform.position, Mathf.Infinity, layerMask);
+                    if (hit)
+                    {
+                        npcState = NPCState.Combat;
+                        StartCoroutine(Wait());
+                    }
+                }
+            }
+        }
+
+        // Execute an attack on the target
+        IEnumerator Attack()
+        {
+            enemyState = EnemyState.Attacking;
+            movementController.SetMove(0);
+            StartCoroutine(slash.Cast());
+            while (slash.IsActive)
+            {
+                yield return null;
+            }
+            StartCoroutine(Wait());
+        }
+
+        // Wait a delay of one second
+        IEnumerator Wait()
+        {
+            enemyState = EnemyState.Idle;
+            yield return new WaitForSeconds(1);
+            enemyState = EnemyState.Moving;
+        }
+    }
+}

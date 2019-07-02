@@ -13,7 +13,6 @@ public abstract class Talent : Module
 {
     // Requisite scripts
     protected TargettingController targettingController;
-    protected TalentController talentController;
 
     // Enum properties
     protected int castAnimation;
@@ -39,28 +38,24 @@ public abstract class Talent : Module
     protected bool isCasting;
     public bool IsCasting { get => isCasting; set => isCasting = value; }
 
-    public virtual void Initialize(TargettingController targettingController, TalentController talentController)
+    public virtual void Initialize(TargettingController targettingController)
     {
         this.targettingController = targettingController;
-        this.talentController = talentController;
     }
 
     public virtual IEnumerator Cast()
     {
         isActive = true;
         isTelegraphing = true;
-        talentController.SetStatus(true, true, false);
         yield return new WaitForSeconds(telegraphTime);
 
         isTelegraphing = false;
         isCasting = true;
-        talentController.SetStatus(true, false, true);
         CastEffect();
         yield return new WaitForSeconds(castingTime);
 
         isCasting = false;
         isActive = false;
-        talentController.SetStatus(false, false, false);
     }
 
     protected virtual void CastEffect()
