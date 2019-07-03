@@ -5,10 +5,12 @@ public class DodgeController : MonoBehaviour
 {
     private Actor actor;
     private TargettingController targettingController;
-    private SpriteRenderer spriteRenderer;    
+    public LandMovementController movementController;
+    
     private Collider2D thisCollider;
     private Rigidbody2D rb2d;
     private Mana mana;
+    public ParticleSystem afterimage;
 
     private Vector2 dodgeDirection;
     private Vector2 dodgeDestination;
@@ -35,7 +37,6 @@ public class DodgeController : MonoBehaviour
     {
         targettingController = GetComponent<TargettingController>();
         thisCollider = GetComponent<Collider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         rb2d = GetComponent<Rigidbody2D>();
         mana = GetComponent<Mana>();
 
@@ -49,10 +50,8 @@ public class DodgeController : MonoBehaviour
         }
 
         contactFilter.useTriggers = false;
-        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
-        contactFilter.useLayerMask = true;
+        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(14));
 
-        
         isDodging = false;
     }
 
@@ -61,7 +60,7 @@ public class DodgeController : MonoBehaviour
         if (isDodging)
         {
             //transform.Translate(dodgeDirection * 4.0f * Time.deltaTime, Space.Self);
-            rb2d.position = Vector2.SmoothDamp(transform.position, dodgeDestination, ref currentVelocity, 0.09f);
+            rb2d.position = Vector2.SmoothDamp(transform.position, dodgeDestination, ref currentVelocity, 0.07f);
         }
     }
 
@@ -135,15 +134,19 @@ public class DodgeController : MonoBehaviour
 
     IEnumerator Dodge()
     {
+        afterimage.Play();
         actor.CanCharacterAction = false;
         isDodging = true;
         actor.IsImmuneToHit = true;
+        gameObject.layer = 14;
 
         yield return new WaitForSeconds(0.5f);
 
         isDodging = false;
         actor.IsImmuneToHit = false;
         actor.CanCharacterAction = true;
+        afterimage.Stop();
+        gameObject.layer = 8;
     }
 
     //IEnumerator RecoverCharges()
