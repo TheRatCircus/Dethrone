@@ -10,4 +10,10 @@ public class Actor : MonoBehaviour
     public bool CanCharacterAction { get => canCharacterAction; set => canCharacterAction = value; }
     protected bool isImmuneToHit;
     public bool IsImmuneToHit { get => isImmuneToHit; set => isImmuneToHit = value; }
+
+    // Called when this actor is hit by an AoE or projectile
+    public virtual void OnHit()
+    {
+
+    }
 }

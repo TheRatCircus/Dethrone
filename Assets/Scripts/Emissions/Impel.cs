@@ -6,11 +6,6 @@ namespace Dethrone.Emissions
 {
     public class Impel : Projectile
     {
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         private void Start()
         {
             GetComponent<Rigidbody2D>().AddForce(direction * speed);

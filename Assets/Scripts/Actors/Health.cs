@@ -22,10 +22,10 @@ public class Health : MonoBehaviour
     }
 
     // Public health modifier function
-    public void ModifyHealth(float healthMod)
+    public void ChangeHealth(float healthChange)
     {
-        health += healthMod;
-        OnHealthChangeEvent?.Invoke(healthMod, transform);
+        health += healthChange;
+        OnHealthChangeEvent?.Invoke(healthChange, transform);
         health = Mathf.Clamp(health, 0, HealthMax);
         CheckIfDead();
     }

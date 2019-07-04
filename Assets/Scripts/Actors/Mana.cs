@@ -47,7 +47,7 @@ public class Mana : MonoBehaviour
             mana += manaChange;
         } else
         {
-            health.ModifyHealth(-manaChange);
+            health.ChangeHealth(-manaChange);
         }
 
         if (mana >= manaMax)

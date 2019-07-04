@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class LandMovementController : PhysicsObject
@@ -23,6 +22,8 @@ public class LandMovementController : PhysicsObject
     {
         contactFilter.useTriggers = false;
         LayerMask defaultLayerMask = Physics2D.GetLayerCollisionMask(gameObject.layer);
+        // Prevent actors from moving on collision with Talent emissions
+        defaultLayerMask = defaultLayerMask & ~((1 << 15) | (1 << 9));
         contactFilter.SetLayerMask(defaultLayerMask);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -82,7 +83,6 @@ public class LandMovementController : PhysicsObject
         // Only check for collisions if moving
         if (distance > minMoveDistance)
         {
-            contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(gameObject.layer));
             int hitBufferCount = rb2d.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
             int StepBufferCount = rb2d.Cast(
                 move.x != 0 && move.x > 0 ? Vector2.right : Vector2.left,

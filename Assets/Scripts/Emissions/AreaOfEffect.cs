@@ -22,11 +22,6 @@ namespace Dethrone.Emissions
         public bool IsTelegraphing { get => isTelegraphing; set => isTelegraphing = value; }
         public bool IsAffecting { get => isAffecting; set => isAffecting = value; }
 
-        void Awake()
-        {
-            gameObject.layer = 9;
-        }
-
         // Start is called before the first frame update
         void Start()
         {
@@ -42,9 +37,17 @@ namespace Dethrone.Emissions
         }
 
         // Call on instantiation to pass Talent behaviour to this AOE
-        public virtual void Initialize(float damage)
+        public virtual void Initialize(float damage, bool ownedByPlayer)
         {
             this.damage = damage;
+            if (ownedByPlayer)
+            {
+                gameObject.layer = 9;
+            }
+            else
+            {
+                gameObject.layer = 15;
+            }
         }
 
         public virtual void SetStatus(bool isActive, bool isTelegraphing, bool isAffecting)
@@ -54,23 +57,34 @@ namespace Dethrone.Emissions
             this.isAffecting = isAffecting;
         }
 
-        public void SetAOEIsTrigger(bool isTrigger)
+        public void EnableAOE(bool isTrigger)
         {
             transform.GetComponent<Collider2D>().isTrigger = isTrigger;
         }
 
-        protected void OnTriggerEnter2D(Collider2D collision)
+        protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
-            transform.GetComponent<Collider2D>().isTrigger = false;
-            if (collision.tag == "Enemy")
+            OnHitActor(collision.gameObject);
+        }
+
+        protected virtual void OnHitActor(GameObject gameObject)
+        {
+            Actor actor = gameObject.GetComponent<Actor>();
+            if (actor != null)
             {
-                DamageActor(collision.GetComponent<Health>());
+                actor.OnHit();
+            }
+
+            Health health = gameObject.GetComponent<Health>();
+            if (health != null)
+            {
+                DamageActor(health);
             }
         }
 
         protected void DamageActor(Health health)
         {
-            health.ModifyHealth(-damage);
+            health.ChangeHealth(-damage);
         }
 
         // Destroy this area of effect

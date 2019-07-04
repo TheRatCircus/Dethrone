@@ -30,8 +30,8 @@ public class PlayerTalentController : MonoBehaviour
 
         // TEMPORARY
         primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>(), ScriptableObject.CreateInstance<Impel>() };
-        primaryTalents[0].Initialize(targettingController);
-        primaryTalents[1].Initialize(targettingController);
+        primaryTalents[0].Initialize(targettingController, gameObject);
+        primaryTalents[1].Initialize(targettingController, gameObject);
     }
 
     // Update is called once per frame

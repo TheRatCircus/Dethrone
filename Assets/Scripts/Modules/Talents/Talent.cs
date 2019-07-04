@@ -11,8 +11,8 @@ public enum CastAnimation
 
 public abstract class Talent : Module
 {
-    // Requisite scripts
     protected TargettingController targettingController;
+    protected GameObject owner;
 
     // Enum properties
     protected int castAnimation;
@@ -38,9 +38,10 @@ public abstract class Talent : Module
     protected bool isCasting;
     public bool IsCasting { get => isCasting; set => isCasting = value; }
 
-    public virtual void Initialize(TargettingController targettingController)
+    public virtual void Initialize(TargettingController targettingController, GameObject owner)
     {
         this.targettingController = targettingController;
+        this.owner = owner;
     }
 
     public virtual IEnumerator Cast()

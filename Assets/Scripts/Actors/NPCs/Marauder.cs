@@ -58,7 +58,7 @@ namespace Dethrone.NPCs
             }
 
             slash = ScriptableObject.CreateInstance<Slash>();
-            slash.Initialize(targettingController);
+            slash.Initialize(targettingController, gameObject);
 
             StartCoroutine(ScanForTarget());
         }
@@ -98,11 +98,22 @@ namespace Dethrone.NPCs
                     RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position - transform.position, Mathf.Infinity, layerMask);
                     if (hit)
                     {
-                        npcState = NPCState.Combat;
-                        StartCoroutine(Wait());
+                        DetectTarget();
                     }
                 }
             }
+        }
+
+        // Called when this actor is hit by an AoE or projectile
+        public override void OnHit()
+        {
+            DetectTarget();
+        }
+
+        void DetectTarget()
+        {
+            npcState = NPCState.Combat;
+            StartCoroutine(Wait());
         }
 
         // Execute an attack on the target

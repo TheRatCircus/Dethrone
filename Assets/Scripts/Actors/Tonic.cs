@@ -35,7 +35,7 @@ public class Tonic : MonoBehaviour
     {
         if (tonicActive)
         {
-            health.ModifyHealth((healAmount / healTime) * Time.deltaTime);
+            health.ChangeHealth((healAmount / healTime) * Time.deltaTime);
         }
     }
 

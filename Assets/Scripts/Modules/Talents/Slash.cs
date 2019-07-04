@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Dethrone.Talents
@@ -33,7 +32,7 @@ namespace Dethrone.Talents
             isTelegraphing = false;
             isCasting = true;
             slashAOE.SetStatus(true, false, true);
-            slashAOE.SetAOEIsTrigger(true);
+            slashAOE.EnableAOE(true);
             yield return new WaitForSeconds(castingTime);
 
             isCasting = false;
@@ -51,9 +50,14 @@ namespace Dethrone.Talents
         {
             slashGameObject = Instantiate(prefab, targettingController.GetOrbitPoint(range), targettingController.AimRotation, targettingController.transform);
             slashAOE = slashGameObject.GetComponent<Emissions.Slash>();
-            slashAOE.Initialize(damage);
+            if (owner.tag == "Player")
+            {
+                slashAOE.Initialize(damage, true);
+            }
+            else
+            {
+                slashAOE.Initialize(damage, false);
+            }
         }
-
     }
-
 }

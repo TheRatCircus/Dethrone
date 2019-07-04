@@ -126,7 +126,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Effect
-  m_Speed: 8
+  m_Speed: 16
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7820004913313433348}
@@ -153,7 +153,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Idle
-  m_Speed: 8
+  m_Speed: 16
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101956715317339550}
@@ -180,7 +180,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Telegraph
-  m_Speed: 8
+  m_Speed: 16
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1101564263591660786}
