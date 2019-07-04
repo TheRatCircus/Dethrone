@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿// In-game pause menu behaviour
+using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenu;
-
-    // Use this for initialization
-    void Start()
-    {
-    }
 
     // Update is called once per frame
     void Update()
@@ -19,6 +14,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    // Toggle the pause menu on and off while halting runtime
     public void TogglePauseMenu()
     {
         if (pauseMenu.activeSelf)
@@ -33,12 +29,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    public void ClosePauseMenu()
-    {
-        pauseMenu.SetActive(false);
-        Time.timeScale = 1.0f;
-    }
-
+    // Quit the game
     public void Quit()
     {
         Application.Quit();

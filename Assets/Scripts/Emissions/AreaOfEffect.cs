@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿// Any area of effect cast via a Talent, damaging or otherwise
+using UnityEngine;
 
-// Any area of effect cast via a Talent, damaging or otherwise
 namespace Dethrone.Emissions
 {
     public class AreaOfEffect : MonoBehaviour
@@ -8,19 +8,13 @@ namespace Dethrone.Emissions
         // Requisite components
         private Animator animator;
 
-        // Boolean properties
         private bool dealsKnockback;
-
-        // Numeric properties
         protected float damage;
 
         // Status vars
-        private bool isActive;
-        private bool isTelegraphing;
-        private bool isAffecting;
-        public bool IsActive { get => isActive; set => isActive = value; }
-        public bool IsTelegraphing { get => isTelegraphing; set => isTelegraphing = value; }
-        public bool IsAffecting { get => isAffecting; set => isAffecting = value; }
+        protected bool isActive;
+        protected bool isTelegraphing;
+        protected bool isAffecting;
 
         // Start is called before the first frame update
         void Start()
@@ -37,10 +31,10 @@ namespace Dethrone.Emissions
         }
 
         // Call on instantiation to pass Talent behaviour to this AOE
-        public virtual void Initialize(float damage, bool ownedByPlayer)
+        public virtual void Initialize(float damage, GameObject owner)
         {
             this.damage = damage;
-            if (ownedByPlayer)
+            if (owner.tag == "Player")
             {
                 gameObject.layer = 9;
             }
@@ -57,16 +51,19 @@ namespace Dethrone.Emissions
             this.isAffecting = isAffecting;
         }
 
+        // Turn this AOE into a trigger
         public void EnableAOE(bool isTrigger)
         {
             transform.GetComponent<Collider2D>().isTrigger = isTrigger;
         }
 
+        // Called when an attached trigger collider enters another collider
         protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
             OnHitActor(collision.gameObject);
         }
 
+        // AOE behaviour on hitting an actor
         protected virtual void OnHitActor(GameObject gameObject)
         {
             Actor actor = gameObject.GetComponent<Actor>();
@@ -82,6 +79,7 @@ namespace Dethrone.Emissions
             }
         }
 
+        // Deal damage to an actor, usually on hit
         protected void DamageActor(Health health)
         {
             health.ChangeHealth(-damage);

@@ -14,6 +14,7 @@ namespace Dethrone.Emissions
 
         bool isSpinning;
 
+        // Awake is called when the script instance is being loaded
         protected virtual void Awake()
         {
             gameObject.layer = 9;

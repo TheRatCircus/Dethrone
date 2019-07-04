@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
-    protected string actorName;
-
     // Status vars
     protected bool canCharacterAction;
     public bool CanCharacterAction { get => canCharacterAction; set => canCharacterAction = value; }

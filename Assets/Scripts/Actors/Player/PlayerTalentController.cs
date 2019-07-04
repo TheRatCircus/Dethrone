@@ -1,11 +1,11 @@
-﻿// Central storage for Talent objects and handling of their casting
+﻿// Central storage and casting of Talents in the player
 using UnityEngine;
 using System.Collections;
 using Dethrone.Talents;
 
 public class PlayerTalentController : MonoBehaviour
 {
-    // Requisite scripts
+    // Requisite objects
     protected TargettingController targettingController;
     protected Animator animator;
     protected Mana mana;
@@ -77,12 +77,13 @@ public class PlayerTalentController : MonoBehaviour
     // Finally go through the process of casting the talent
     public void CastTalent(Talent talent)
     {
-        animator.SetInteger("castAnimation", talent._castAnimation);
+        animator.SetInteger("castAnimation", talent.CastAnimation);
         StartCoroutine(talent.Cast());
         StartCoroutine(OnCast(talent));
         mana.ModifyMana(-talent.ManaCost, talent.CostsHealth);
     }
 
+    // Read Talent status for use in own status
     IEnumerator OnCast(Talent talent)
     {
         isActive = true;

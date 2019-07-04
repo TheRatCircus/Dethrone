@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// Parent class for all weapons
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class Weapon : ScriptableObject
 {
     // Start is called before the first frame update
     void Start()

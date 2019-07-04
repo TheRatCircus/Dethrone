@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿// Player mana system
+using System.Collections;
 using UnityEngine;
 
 public class Mana : MonoBehaviour
@@ -16,6 +17,7 @@ public class Mana : MonoBehaviour
     // Status vars
     private bool manaIsRegenerating;
 
+    // Awake is called when the script instance is being loaded
     private void Awake()
     {
         manaMax = 100;

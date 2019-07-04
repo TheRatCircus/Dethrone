@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿// Fast melee enemy with a leaping attack
+using System.Collections;
 using UnityEngine;
 using Dethrone.Talents;
 
+// State of this NPC
 public enum NPCState
 {
     None,
@@ -11,7 +13,8 @@ public enum NPCState
     Combat
 }
 
-public enum EnemyState
+// State of this NPC in combat
+public enum CombatState
 {
     None,
     Idle,
@@ -34,7 +37,7 @@ namespace Dethrone.NPCs
         public float attackRange;
 
         protected NPCState npcState;
-        protected EnemyState enemyState;
+        protected CombatState combatState;
 
         protected bool isTelegraphing;
         protected bool isCasting;
@@ -43,7 +46,7 @@ namespace Dethrone.NPCs
         protected void Awake()
         {
             npcState = NPCState.WaitingForPlayer;
-            enemyState = EnemyState.None;
+            combatState = CombatState.None;
         }
 
         // Start is called before the first frame update
@@ -70,7 +73,7 @@ namespace Dethrone.NPCs
             {
                 targettingController.CatchPointer(target.transform.position);
                 
-                if (enemyState == EnemyState.Moving)
+                if (combatState == CombatState.Moving)
                 {
                     if (Vector2.Distance(target.transform.position, transform.position) < attackRange)
                     {
@@ -119,7 +122,7 @@ namespace Dethrone.NPCs
         // Execute an attack on the target
         IEnumerator Attack()
         {
-            enemyState = EnemyState.Attacking;
+            combatState = CombatState.Attacking;
             movementController.SetMove(0);
             StartCoroutine(slash.Cast());
             while (slash.IsActive)
@@ -132,9 +135,9 @@ namespace Dethrone.NPCs
         // Wait a delay of one second
         IEnumerator Wait()
         {
-            enemyState = EnemyState.Idle;
+            combatState = CombatState.Idle;
             yield return new WaitForSeconds(1);
-            enemyState = EnemyState.Moving;
+            combatState = CombatState.Moving;
         }
     }
 }

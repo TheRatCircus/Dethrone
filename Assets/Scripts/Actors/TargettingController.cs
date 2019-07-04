@@ -1,5 +1,4 @@
-﻿// 
-using System;
+﻿// Controls actor targetting for Talents
 using UnityEngine;
 
 public class TargettingController : MonoBehaviour
@@ -28,7 +27,6 @@ public class TargettingController : MonoBehaviour
     // First area of ground beneath the point-cast pointer
     private Vector2 groundPointer;
     public Vector2 GroundPointer { get => groundPointer; }
-    
 
     // Use this for initialization
     void Start()
@@ -93,6 +91,7 @@ public class TargettingController : MonoBehaviour
         aimRay.direction = globalPointer - (Vector2)transform.position;
     }
 
+    // Handle aimDirection
     private void HandleAimDirection()
     {
         aimDirection = (aimRay.GetPoint(1) - (Vector2)transform.position).normalized;
@@ -106,6 +105,7 @@ public class TargettingController : MonoBehaviour
         aimRotation = Quaternion.Euler(0, 0, aimAngle);
     }
 
+    // Get a point in the actor's orbit, given a range
     public Vector2 GetOrbitPoint(float orbitRange)
     {
         return aimRay.GetPoint(orbitRange);

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class LandMovementController : PhysicsObject
 {
+    private TargettingController targettingController;
+    private SpriteRenderer spriteRenderer;
+    private Animator animator;
+    private Collider2D thisCollider;
+
     public float maxSpeed = 7;
     public float jumpTakeOffSpeed = 7;
 
@@ -10,14 +15,10 @@ public class LandMovementController : PhysicsObject
     private float moveInput;
     private bool isJumping;
 
-    private TargettingController targettingController;
-    private SpriteRenderer spriteRenderer;
-    private Animator animator;
-    private Collider2D thisCollider;
-
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
 
+    // Start is called before the first frame update
     void Start()
     {
         contactFilter.useTriggers = false;
@@ -41,7 +42,7 @@ public class LandMovementController : PhysicsObject
         this.isJumping = isJumping;
     }
 
-    //
+    // Calculate this actor's current velocity
     protected override void ComputeVelocity()
     {
         // Start move at zero, then feed input from external controller
@@ -75,7 +76,7 @@ public class LandMovementController : PhysicsObject
         targetVelocity = move * maxSpeed;
     }
 
-    //
+    // Handle this actor's movement
     protected override void Movement(Vector2 move, bool yMovement)
     {
         float distance = move.magnitude;
@@ -124,7 +125,6 @@ public class LandMovementController : PhysicsObject
                 distance = modifiedDistance < distance ? modifiedDistance : distance;
             }
         }
-        
         rb2d.position = rb2d.position + move.normalized * distance;
     }
 }

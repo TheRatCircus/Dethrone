@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Handler for in-game character menu
+using UnityEngine;
 using System.Collections;
 
 public class CharacterMenu : MonoBehaviour

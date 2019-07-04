@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿// Projectile emitted by Impel
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -31,6 +31,7 @@ public class Tonic : MonoBehaviour
         healTime = 3f;
     }
 
+    // Update is called once per frame
     private void Update()
     {
         if (tonicActive)

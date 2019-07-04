@@ -1,11 +1,10 @@
-﻿using UnityEngine;
+﻿// Central controller for player character
+using UnityEngine;
 
-// Central handling for all player input
 public class PlayerCharacterController : Actor
 {
     public Camera cam;
     private Vector2 pointerPosition;
-    public Vector2 PointerPosition { get => pointerPosition; }
 
     // Scripts receiving input
     private TargettingController targettingController;
@@ -14,10 +13,9 @@ public class PlayerCharacterController : Actor
     private LandMovementController playerMovementController;
     private Tonic tonic;
 
-    // Status vars
     private bool isJumping;
 
-    // Use this for initialization
+    // Start is called before the first frame update
     void Start()
     {
         if (cam == null)

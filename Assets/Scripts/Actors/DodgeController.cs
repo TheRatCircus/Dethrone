@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿// Controls the blink dodge
+using System.Collections;
 using UnityEngine;
 
 public class DodgeController : MonoBehaviour
 {
+    // Requisite objects
     private Actor actor;
     private TargettingController targettingController;
     public LandMovementController movementController;
-    
     private Collider2D thisCollider;
     private Rigidbody2D rb2d;
     private Mana mana;
@@ -17,22 +18,18 @@ public class DodgeController : MonoBehaviour
     private ContactFilter2D contactFilter;
 
     private float dodgeManaCost;
-    //private int dodgeCharges;
-    //private int dodgeChargesMax;
-    //public int DodgeCharges { get => dodgeCharges; }
-    //public int DodgeChargesMax { get => dodgeChargesMax; set => dodgeChargesMax = value; }
-
+    // Status
     private bool isDodging;
     private bool isRecovering;
     private Vector2 currentVelocity;
 
+    // Awake is called when the script instance is being loaded
     private void Awake()
     {
-        dodgeManaCost = 34f;
-        //dodgeChargesMax = 3;
-        //dodgeCharges = dodgeChargesMax;
+        dodgeManaCost = 33f;
     }
 
+    // Start is called before the first frame update
     private void Start()
     {
         targettingController = GetComponent<TargettingController>();
@@ -44,26 +41,22 @@ public class DodgeController : MonoBehaviour
         {
             actor = GetComponent<PlayerCharacterController>();
         }
-        else
-        {
-            actor = GetComponent<NPCController>();
-        }
-
         contactFilter.useTriggers = false;
         contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(14));
 
         isDodging = false;
     }
 
+    // Update is called once per frame
     private void Update()
     {
         if (isDodging)
         {
-            //transform.Translate(dodgeDirection * 4.0f * Time.deltaTime, Space.Self);
             rb2d.position = Vector2.SmoothDamp(transform.position, dodgeDestination, ref currentVelocity, 0.07f);
         }
     }
 
+    // Set the direction in which the actor will dodge
     public void SetDodgeDirection((int dodgeX, int dodgeY) dodgeAxes)
     {
         if (!isDodging)
@@ -74,7 +67,8 @@ public class DodgeController : MonoBehaviour
 
         SetDodgeDestination();
     }
-
+    
+    // Determine the destination to which the actor will dodge
     private void SetDodgeDestination()
     {
         if (!isDodging)
@@ -82,8 +76,6 @@ public class DodgeController : MonoBehaviour
             RaycastHit2D[] dodgeCollideBuffer = new RaycastHit2D[16];
             Ray2D ray = new Ray2D(transform.position, dodgeDirection);
             int collideBufferCount = thisCollider.Cast(dodgeDirection, contactFilter, dodgeCollideBuffer, 3.0f);
-
-            //StartCoroutine(Dodge());
 
             if (collideBufferCount > 0)
             {
@@ -96,22 +88,9 @@ public class DodgeController : MonoBehaviour
         }
     }
 
+    // Check if dodge is possible; called only by player controller
     public void TryDodge()
     {
-        //if (!collideHandler.GetIsColliding() && dodgeCharges > 0)
-        //{
-        //    GetComponent<Rigidbody2D>().position = dodgeCrosshair.transform.position;
-        //    dodgeCharges--;
-        //    if (!isRecovering)
-        //    {
-        //        StartCoroutine("RecoverCharges");
-        //    }
-        //}
-
-        //RaycastHit2D[] dodgeCollideBuffer = new RaycastHit2D[16];
-        //Ray2D ray = new Ray2D(transform.position, dodgeDirection);
-        //int collideBufferCount = thisCollider.Cast(dodgeDirection, contactFilter, dodgeCollideBuffer, 3.0f);
-
         if (mana._mana >= dodgeManaCost)
         {
             mana.ModifyMana(-dodgeManaCost, false);
@@ -121,17 +100,9 @@ public class DodgeController : MonoBehaviour
         {
             Debug.Log("Insufficient mana to dodge.");
         }
-
-        //if (collideBufferCount > 0)
-        //{
-        //    rb2d.position = ray.GetPoint(dodgeCollideBuffer[0].distance);
-        //}
-        //else
-        //{
-        //    rb2d.position = ray.GetPoint(3.0f);
-        //}
     }
 
+    // Finally carry out a dodge
     IEnumerator Dodge()
     {
         afterimage.Play();
@@ -148,15 +119,4 @@ public class DodgeController : MonoBehaviour
         afterimage.Stop();
         gameObject.layer = 8;
     }
-
-    //IEnumerator RecoverCharges()
-    //{
-    //    isRecovering = true;
-    //    while (dodgeCharges < dodgeChargesMax)
-    //    {
-    //        yield return new WaitForSeconds(1.0f);
-    //        dodgeCharges++;
-    //    }
-    //    isRecovering = false;
-    //}
 }
