@@ -12,19 +12,13 @@ public class PopupManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        damagePopupPrefab = (Text)Resources.Load("Prefabs/DamagePopup", typeof(Text));
+        damagePopupPrefab = (Text)Resources.Load("Prefabs/HealthChangePopup", typeof(Text));
 
         Health[] healths = (Health[])Resources.FindObjectsOfTypeAll(typeof(Health));
         foreach (Health health in healths)
         {
             health.OnHealthChangeEvent += HealthChangePopup;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // Create a popup whenever an actor is healed or damaged

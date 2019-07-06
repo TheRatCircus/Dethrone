@@ -69,7 +69,7 @@ namespace Dethrone.Emissions
             Actor actor = gameObject.GetComponent<Actor>();
             if (actor != null)
             {
-                actor.OnHit();
+                actor.OnHit(transform.position);
             }
 
             Health health = gameObject.GetComponent<Health>();

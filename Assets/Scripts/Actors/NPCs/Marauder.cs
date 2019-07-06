@@ -50,8 +50,9 @@ namespace Dethrone.NPCs
         }
 
         // Start is called before the first frame update
-        void Start()
+        new void Start()
         {
+            
             movementController = GetComponent<LandMovementController>();
             targettingController = GetComponent<TargettingController>();
 
@@ -108,8 +109,9 @@ namespace Dethrone.NPCs
         }
 
         // Called when this actor is hit by an AoE or projectile
-        public override void OnHit()
+        public override void OnHit(Vector2 hitSrcPos)
         {
+            base.OnHit(hitSrcPos);
             DetectTarget();
         }
 
