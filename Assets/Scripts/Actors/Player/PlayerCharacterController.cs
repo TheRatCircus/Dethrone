@@ -16,8 +16,9 @@ public class PlayerCharacterController : Actor
     private bool isJumping;
 
     // Start is called before the first frame update
-    new void Start()
+    protected override void Start()
     {
+        base.Start();
         if (cam == null)
         {
             cam = Camera.main;
