@@ -5,6 +5,7 @@ public class Health : MonoBehaviour
 {
     // Events
     public event System.Action<float, Transform> OnHealthChangeEvent;
+    public event System.Action OnDeathEvent;
 
     // Numeric fields
     private float health;
@@ -35,14 +36,7 @@ public class Health : MonoBehaviour
     {
         if (health <= 0)
         {
-            Die();
+            OnDeathEvent?.Invoke();
         }
     }
-
-    // Cause entity to die
-    public void Die()
-    {
-        Destroy(transform.gameObject);
-    }
-
 }

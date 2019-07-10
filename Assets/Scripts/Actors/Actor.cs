@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
-    // Requisite objects
-    protected ParticleSystem blood;
+    public GameObject bloodSpray;
+    public GameObject bloodSplat;
+    public GameObject gibs;
 
     // Status vars
     protected bool canCharacterAction;
@@ -12,27 +13,43 @@ public class Actor : MonoBehaviour
     protected bool isImmuneToHit;
     public bool IsImmuneToHit { get => isImmuneToHit; set => isImmuneToHit = value; }
 
+    Vector2 lastHitSrcPos;
+
+    // Start is called before the first frame update
     protected virtual void Start()
     {
-        blood = transform.Find("Blood").GetComponent<ParticleSystem>();
+        GetComponent<Health>().OnDeathEvent += Die;
     }
 
     // Called when this actor is hit by an AoE or projectile
     public virtual void OnHit(Vector2 hitSrcPos)
     {
+        lastHitSrcPos = hitSrcPos;
+
         BloodSpray(hitSrcPos);
+        BloodSplat(hitSrcPos);
     }
 
     // Generate a spray of blood in the opposite direction to the incoming hit
     void BloodSpray(Vector2 hitSrcPos)
     {
-        // Blood particle system needs an angle of -180 < x < 180
-        Vector3 bloodSplatDir = new Vector3(
-            Mathf.Atan2(hitSrcPos.y + transform.position.y,
-            hitSrcPos.x + transform.position.x) * Mathf.Rad2Deg,
-            90, -90);
-        ParticleSystem.ShapeModule bloodShape = blood.shape;
-        bloodShape.rotation = bloodSplatDir;
-        blood.Play();
+        Vector2 hitDirection = ((Vector2)transform.position - hitSrcPos).normalized;
+        Destroy(Instantiate(bloodSpray, hitSrcPos, Quaternion.FromToRotation(Vector2.right, hitDirection)) as GameObject, 5);
+    }
+
+    // Generate a splatter of blood on the background wall if one exists
+    void BloodSplat(Vector2 hitSrcPos)
+    {
+        if (GameObject.Find("Background Walls").GetComponent<Collider2D>().OverlapPoint(transform.position))
+        {
+            Destroy(Instantiate(bloodSplat, hitSrcPos, Quaternion.FromToRotation(hitSrcPos, transform.position)) as GameObject, 5);
+        }
+    }
+
+    // Kill this actor
+    void Die()
+    {
+        Destroy(Instantiate(gibs, lastHitSrcPos, Quaternion.FromToRotation(Vector2.right, lastHitSrcPos)) as GameObject, 5);
+        Destroy(gameObject);
     }
 }
