@@ -6,7 +6,7 @@ public class LandMovementController : PhysicsObject
     private TargettingController targettingController;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
-    private Collider2D thisCollider;
+    private BoxCollider2D thisCollider;
 
     public float maxSpeed = 7;
     public float jumpTakeOffSpeed = 7;
@@ -14,6 +14,10 @@ public class LandMovementController : PhysicsObject
     private Vector2 move;
     private float moveInput;
     private bool isJumping;
+    private bool ignoringPlatforms;
+
+    LayerMask defaultLayerMask;
+    LayerMask platformLayerMask;
 
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
@@ -22,19 +26,24 @@ public class LandMovementController : PhysicsObject
     void Start()
     {
         contactFilter.useTriggers = false;
-        LayerMask defaultLayerMask = Physics2D.GetLayerCollisionMask(gameObject.layer);
+
+        defaultLayerMask = Physics2D.GetLayerCollisionMask(gameObject.layer);
         // Prevent actors from moving on collision with Talent emissions
         defaultLayerMask = defaultLayerMask & ~((1 << 15) | (1 << 9));
-        contactFilter.SetLayerMask(defaultLayerMask);
+
+        platformLayerMask = defaultLayerMask & ~(1 << 17);
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        thisCollider = GetComponent<Collider2D>();
+        thisCollider = GetComponent<BoxCollider2D>();
         targettingController = GetComponent<TargettingController>();
     }
 
     // Set the current horizontal move. Call every frame
     public void SetMove(float moveX) => this.moveInput = moveX;
+
+    // Set if actor is going down through platforms
+    public void SetIgnoringPlatforms(bool ignoringPlatforms) => this.ignoringPlatforms = ignoringPlatforms;
 
     // Set whether or not character is jumping. Call every frame
     public void SetJumping(bool isJumping)
@@ -84,6 +93,45 @@ public class LandMovementController : PhysicsObject
         // Only check for collisions if moving
         if (distance > minMoveDistance)
         {
+            // Check if overlapping with a platform
+            bool overlappingWithPlatform = false;
+
+            ContactFilter2D platformOverlapFilter = new ContactFilter2D();
+            platformOverlapFilter.useTriggers = false;
+            platformOverlapFilter.SetLayerMask((1 << 17));
+
+            Collider2D[] platformCheckColliders = new Collider2D[4];
+
+            Rect colliderRect = new Rect();
+            colliderRect.min = thisCollider.bounds.min;
+            colliderRect.max = thisCollider.bounds.max;
+
+            thisCollider.OverlapCollider(platformOverlapFilter, platformCheckColliders);
+
+            foreach (BoxCollider2D collider in platformCheckColliders)
+            {
+                if (collider != null)
+                {
+                    Rect platformRect = new Rect();
+                    platformRect.min = collider.bounds.min;
+                    platformRect.max = collider.bounds.max;
+                    if (colliderRect.Overlaps(platformRect))
+                    {
+                        overlappingWithPlatform = true;
+                        break;
+                    }
+                }
+            }
+
+            if (velocity.y > 0 || overlappingWithPlatform || ignoringPlatforms)
+            {
+                contactFilter.SetLayerMask(platformLayerMask);
+            }
+            else
+            {
+                contactFilter.SetLayerMask(defaultLayerMask);
+            }
+
             int hitBufferCount = rb2d.Cast(move, contactFilter, hitBuffer, distance + shellRadius);
             int StepBufferCount = rb2d.Cast(
                 move.x != 0 && move.x > 0 ? Vector2.right : Vector2.left,
@@ -128,5 +176,3 @@ public class LandMovementController : PhysicsObject
         rb2d.position = rb2d.position + move.normalized * distance;
     }
 }
-
-

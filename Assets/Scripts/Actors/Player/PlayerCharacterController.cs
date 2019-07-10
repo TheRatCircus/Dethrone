@@ -64,6 +64,14 @@ public class PlayerCharacterController : Actor
     public void MoveInput()
     {
         playerMovementController.SetMove(Input.GetAxis("Horizontal"));
+        if (Input.GetAxis("Vertical") < 0)
+        {
+            playerMovementController.SetIgnoringPlatforms(true);
+        }
+        else
+        {
+            playerMovementController.SetIgnoringPlatforms(false);
+        }
     }
 
     // Catch input activating a jump
