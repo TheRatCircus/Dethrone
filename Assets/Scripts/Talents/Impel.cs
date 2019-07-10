@@ -6,7 +6,7 @@ namespace Dethrone.Talents
 {
     public class Impel : Talent
     {
-        float range = 1.5f;
+        float range = .5f;
         float damage = 20f;
         GameObject prefab;
         GameObject impelGameObject;
