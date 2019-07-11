@@ -7,6 +7,8 @@ public class Actor : MonoBehaviour
     public GameObject bloodSplat;
     public GameObject gibs;
 
+    public AudioClip onHitSound;
+
     // Status vars
     protected bool canCharacterAction;
     public bool CanCharacterAction { get => canCharacterAction; set => canCharacterAction = value; }
@@ -25,6 +27,7 @@ public class Actor : MonoBehaviour
     public virtual void OnHit(Vector2 hitSrcPos)
     {
         lastHitSrcPos = hitSrcPos;
+        AudioManager.instance.PlaySound(onHitSound, hitSrcPos);
 
         BloodSpray(hitSrcPos);
         BloodSplat(hitSrcPos);

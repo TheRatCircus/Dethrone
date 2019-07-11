@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Actors\Player\Weapon.cs" />
     <Compile Include="Assets\Scripts\Actors\TargettingController.cs" />
     <Compile Include="Assets\Scripts\Actors\Tonic.cs" />
+    <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\Augments\Augment.cs" />
     <Compile Include="Assets\Scripts\Emissions\AreaOfEffect.cs" />
     <Compile Include="Assets\Scripts\Emissions\Impel.cs" />
