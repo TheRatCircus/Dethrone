@@ -1,4 +1,4 @@
-﻿// Any area of effect cast via a Talent, damaging or otherwise
+﻿// Base class for all cast Area of Effects
 using UnityEngine;
 
 namespace Dethrone.Emissions

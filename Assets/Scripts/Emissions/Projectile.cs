@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿// Base class for all projectiles
+using UnityEngine;
 
 namespace Dethrone.Emissions
 {
     public class Projectile : MonoBehaviour
     {
+        public GameObject onDeathEffect;
+
         protected float lifetime;
-        protected float uptime;
+        public float Lifetime { get => lifetime; }
 
         protected float speed;
         protected Vector2 direction;
@@ -33,16 +36,19 @@ namespace Dethrone.Emissions
             this.speed = speed;
         }
 
-        public void SetProjectileIsTrigger(bool isTrigger)
+        // Turn this projectile into a trigger
+        public void EnableProjectile(bool isTrigger)
         {
             transform.GetComponent<Collider2D>().isTrigger = isTrigger;
         }
 
+        // Called when an attached trigger collider enters another collider
         protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
             OnHitActor(collision.gameObject);
         }
 
+        // Projectile behaviour upon hitting an actor
         protected virtual void OnHitActor(GameObject gameObject)
         {
             Actor actor = gameObject.GetComponent<Actor>();
@@ -58,6 +64,7 @@ namespace Dethrone.Emissions
             }
         }
 
+        // Deal damage to an actor, usually on hit
         protected void DamageActor(Health health)
         {
             health.ChangeHealth(-damage);

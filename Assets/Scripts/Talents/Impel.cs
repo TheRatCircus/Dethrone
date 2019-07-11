@@ -33,7 +33,7 @@ namespace Dethrone.Talents
             isTelegraphing = false;
             isCasting = true;
             CastEffect();
-            impelProj.SetProjectileIsTrigger(true);
+            impelProj.EnableProjectile(true);
             yield return new WaitForSeconds(castingTime);
 
             isCasting = false;
@@ -49,6 +49,7 @@ namespace Dethrone.Talents
             impelGameObject = Instantiate(prefab, targettingController.GetOrbitPoint(range), targettingController.AimRotation);
             impelProj = impelGameObject.GetComponent<Emissions.Impel>();
             impelProj.Initialize(damage, targettingController.AimDirection, 512f);
+            Destroy(impelGameObject, impelProj.Lifetime);
         }
     }
 }
