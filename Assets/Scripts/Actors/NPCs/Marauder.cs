@@ -14,13 +14,13 @@ public enum NPCState
 }
 
 // State of this NPC in combat
-public enum CombatState
-{
-    None,
-    Idle,
-    Moving,
-    Attacking
-}
+//public enum CombatState
+//{
+//    None,
+//    Idle,
+//    Moving,
+//    Attacking
+//}
 
 namespace Dethrone.NPCs
 {
@@ -37,16 +37,31 @@ namespace Dethrone.NPCs
         public float attackRange;
 
         protected NPCState npcState;
-        protected CombatState combatState;
+        //protected CombatState combatState;
 
         protected bool isTelegraphing;
         protected bool isCasting;
+
+        // How much horizontal difference between this and target is tolerated
+        // to make this actor stand still?
+        protected float positionalDiffTolerance = .4f;
+        protected float shortDelay = .1f;
+        protected float longDelay = 1;
+
+        // Track the position of this actor's "eyes" so this actor can look
+        // over low walls to see target
+        protected Vector2 eyePosition;
+        // The distance to the target squared. Used instead of Vector2.Distance
+        // to save performance
+        protected float sqrDstToTarget;
 
         // Awake is called when the script instance is being loaded
         protected void Awake()
         {
             npcState = NPCState.WaitingForPlayer;
-            combatState = CombatState.None;
+            //combatState = CombatState.None;
+
+            eyePosition = new Vector2();
         }
 
         // Start is called before the first frame update
@@ -67,64 +82,123 @@ namespace Dethrone.NPCs
             StartCoroutine(ScanForTarget());
         }
 
-        // Update is called once per frame
+        //Update is called once per frame
         void Update()
         {
+            eyePosition = transform.position;
+            eyePosition.y += .5f;
+
             if (npcState == NPCState.Combat)
             {
                 targettingController.CatchPointer(target.transform.position);
-                
-                if (combatState == CombatState.Moving)
-                {
-                    if (Vector2.Distance(target.transform.position, transform.position) < attackRange)
-                    {
-                        StartCoroutine(Attack());
-                    }
-                    else
-                    {
-                        movementController.SetMove(target.transform.position.x > transform.position.x ? 1 : -1);
-                    }
-                }
             }
+
+            sqrDstToTarget = (target.transform.position - transform.position).sqrMagnitude;
         }
 
-        // Check if the target is detected
-        IEnumerator ScanForTarget()
-        {
-            while (npcState != NPCState.Combat)
-            {
-                yield return new WaitForSeconds(.25f);
-                LayerMask layerMask = (1 << 10) | (1 << 13);
-
-                float sqrDstToTarget = (target.transform.position - transform.position).sqrMagnitude;
-                if (sqrDstToTarget <= Mathf.Pow(awareDistance, 2))
-                {
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, target.transform.position - transform.position, Mathf.Infinity, layerMask);
-                    if (hit)
-                    {
-                        DetectTarget();
-                    }
-                }
-            }
-        }
-
-        // Called when this actor is hit by an AoE or projectile
+        //Called when this actor is hit by an AoE or projectile
         public override void OnHit(Vector2 hitSrcPos)
         {
             base.OnHit(hitSrcPos);
             DetectTarget();
         }
 
-        void DetectTarget()
+        // Use square distancing to check if target is within a given distance
+        private bool TargetWithinDistance(float distance) => sqrDstToTarget < Mathf.Pow(distance, 2);
+
+        // Check if the target is detectable
+        private IEnumerator ScanForTarget()
+        {
+            while (npcState != NPCState.Combat)
+            {
+                yield return new WaitForSeconds(.25f);
+
+                LayerMask layerMask = LayerMask.GetMask("Terrain", "Objects", "Player");
+                ContactFilter2D contactFilter = new ContactFilter2D();
+                contactFilter.SetLayerMask(layerMask);
+
+                if (TargetWithinDistance(awareDistance))
+                {
+                    RaycastHit2D[] results = new RaycastHit2D[16];
+                    int noResults = Physics2D.Raycast(eyePosition, target.transform.position - transform.position, contactFilter, results, awareDistance);
+                    for (int i = 0; i < noResults; i++)
+                    {
+                        if (results[i].collider.gameObject.tag != "Player")
+                        {
+                            break;
+                        }
+                        else if (results[i].collider.gameObject.tag == "Player")
+                        {
+                            DetectTarget();
+                            break;
+                        }
+                        else
+                        {
+                            // Do nothing
+                        }
+                    }
+                }
+            }
+        }
+
+        // Detect the target, alerting this actor
+        private void DetectTarget()
         {
             npcState = NPCState.Combat;
             StartCoroutine(Wait());
         }
 
+        // Wait a delay
+        private IEnumerator Wait()
+        {
+            yield return new WaitForSeconds(longDelay);
+            StartCoroutine(ChooseAction());
+        }
+
+        // Decide the actor's next action
+        private IEnumerator ChooseAction()
+        {
+            yield return new WaitForSeconds(shortDelay);
+
+            if (TargetWithinDistance(attackRange))
+            {
+                StartCoroutine(Attack());
+            }
+            else
+            {
+                Move();
+            }
+        }
+
+        // Move this actor towards the target
+        void Move()
+        {
+            if (target.transform.position.x >= (transform.position.x - positionalDiffTolerance) &&
+                target.transform.position.x <= (transform.position.x + positionalDiffTolerance))
+            {
+                movementController.SetMove(0);
+                //If the target is within the same x but higher, try jumping
+                if (!TargetWithinDistance(attackRange)
+                    && target.transform.position.y > transform.position.y)
+                {
+                    movementController.StartCoroutine(movementController.ControlledJump());
+                }
+            }
+            else if (target.transform.position.x > transform.position.x)
+            {
+                movementController.SetMove(1);
+            }
+            else if (target.transform.position.x < transform.position.x)
+            {
+                movementController.SetMove(-1);
+            }
+            
+            StartCoroutine(ChooseAction());
+        }
+
         // Execute an attack on the target
         IEnumerator Attack()
         {
-            combatState = CombatState.Attacking;
             movementController.SetMove(0);
             StartCoroutine(slash.Cast());
             while (slash.IsActive)
@@ -132,14 +206,6 @@ namespace Dethrone.NPCs
                 yield return null;
             }
             StartCoroutine(Wait());
-        }
-
-        // Wait a delay of one second
-        IEnumerator Wait()
-        {
-            combatState = CombatState.Idle;
-            yield return new WaitForSeconds(1);
-            combatState = CombatState.Moving;
         }
     }
 }

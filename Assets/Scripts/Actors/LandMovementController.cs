@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class LandMovementController : PhysicsObject
@@ -49,6 +50,14 @@ public class LandMovementController : PhysicsObject
     public void SetJumping(bool isJumping)
     {
         this.isJumping = isJumping;
+    }
+
+    // Make a fixed-power jump (used by enemies)
+    public IEnumerator ControlledJump()
+    {
+        isJumping = true;
+        yield return null;
+        isJumping = false;
     }
 
     // Calculate this actor's current velocity

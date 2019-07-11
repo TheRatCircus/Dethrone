@@ -18,9 +18,9 @@ namespace Dethrone.Talents
             moduleName = "Slash";
             castAnimation = (int)global::CastAnimation.None;
             prefab = (GameObject)Resources.Load("Prefabs/Slash", typeof(GameObject));
-            manaCost = 20f;
-            telegraphTime = 0.25f;
-            castingTime = 0.25f;
+            manaCost = 20;
+            telegraphTime = .25f;
+            castingTime = .25f;
         }
 
         // Cast this talent

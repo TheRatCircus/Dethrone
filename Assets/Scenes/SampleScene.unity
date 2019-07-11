@@ -1515,7 +1515,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1539219254}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.96, y: -5.67, z: 0}
+  m_LocalPosition: {x: 5, y: -5.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1588,7 +1588,7 @@ MonoBehaviour:
   onHitSound: {fileID: 8300000, guid: 3203ff59097ab844f910a5c25313e395, type: 3}
   target: {fileID: 2085599652}
   awareDistance: 8
-  attackRange: 2
+  attackRange: 2.5
 --- !u!95 &1539219260
 Animator:
   serializedVersion: 3
@@ -1653,7 +1653,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 1.0183744
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -1744,7 +1744,7 @@ MonoBehaviour:
   minGroundNormalY: 0.65
   gravityModifier: 1
   isGravitating: 1
-  maxSpeed: 7
+  maxSpeed: 6
   jumpTakeOffSpeed: 7
 --- !u!1 &1559768431
 GameObject:
