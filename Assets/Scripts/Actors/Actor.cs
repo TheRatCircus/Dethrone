@@ -1,5 +1,6 @@
 ﻿// Generic actor class, holds common actor information and status variables
 using UnityEngine;
+using System.Collections;
 
 public class Actor : MonoBehaviour
 {
@@ -16,6 +17,12 @@ public class Actor : MonoBehaviour
     public bool IsImmuneToHit { get => isImmuneToHit; set => isImmuneToHit = value; }
 
     Vector2 lastHitSrcPos;
+
+    // Awake is called when the script instance is being loaded
+    protected virtual void Awake()
+    {
+        canCharacterAction = true;
+    }
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -55,4 +62,5 @@ public class Actor : MonoBehaviour
         Destroy(Instantiate(gibs, lastHitSrcPos, Quaternion.FromToRotation(Vector2.right, lastHitSrcPos)) as GameObject, 5);
         Destroy(gameObject);
     }
+
 }
