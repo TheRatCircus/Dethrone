@@ -78,6 +78,7 @@ namespace Dethrone.NPCs
 
             slash = ScriptableObject.CreateInstance<Slash>();
             slash.Initialize(targettingController, gameObject);
+            slash.TelegraphTime = .75f;
 
             StartCoroutine(ScanForTarget());
         }
