@@ -109,7 +109,7 @@ public class PlayerCharacterController : Actor
         // If not dodging vertically, default is backstep
         if (dodgeAxes.dodgeY == 0)
         {
-            if (Input.GetAxis("Horizontal") > 0)
+            if (Input.GetAxis("Horizontal") >= 0)
             {
                 dodgeAxes.dodgeX = 1;
             }

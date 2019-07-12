@@ -19,6 +19,8 @@ public class LandMovementController : PhysicsObject
 
     LayerMask defaultLayerMask;
     LayerMask platformLayerMask;
+    int emissionLayerMaskExclusion;
+    int platformLayerMaskExclusion;
 
     protected RaycastHit2D[] stepBuffer = new RaycastHit2D[16];
     protected List<RaycastHit2D> stepBufferList = new List<RaycastHit2D>(16);
@@ -26,22 +28,19 @@ public class LandMovementController : PhysicsObject
     // Start is called before the first frame update
     void Start()
     {
-        contactFilter.useTriggers = false;
-
-        defaultLayerMask = Physics2D.GetLayerCollisionMask(gameObject.layer);
-        // Prevent actors from moving on collision with Talent emissions
-        defaultLayerMask = defaultLayerMask & ~((1 << 15) | (1 << 9));
-
-        platformLayerMask = defaultLayerMask & ~(1 << 17);
-
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<BoxCollider2D>();
         targettingController = GetComponent<TargettingController>();
+
+        contactFilter.useTriggers = false;
+        emissionLayerMaskExclusion = ~LayerMask.GetMask("Ignore Player", "Ignore NPCs");
+        platformLayerMaskExclusion = ~LayerMask.GetMask("Platform");
+        ResetLayerMask();
     }
 
     // Set the current horizontal move. Call every frame
-    public void SetMove(float moveX) => this.moveInput = moveX;
+    public void SetMove(float moveX) => moveInput = moveX;
 
     // Set if actor is going down through platforms
     public void SetIgnoringPlatforms(bool ignoringPlatforms) => this.ignoringPlatforms = ignoringPlatforms;
@@ -58,6 +57,17 @@ public class LandMovementController : PhysicsObject
         isJumping = true;
         yield return null;
         isJumping = false;
+    }
+
+    // Change this actor's LayerMask to match a new layer. Call every time this
+    // actor's layer is changed
+    public void ResetLayerMask()
+    {
+        defaultLayerMask = Physics2D.GetLayerCollisionMask(gameObject.layer);
+        // Prevent actors from moving on collision with Talent emissions
+        // while still allowing hit detection in Unity
+        defaultLayerMask = defaultLayerMask & emissionLayerMaskExclusion;
+        platformLayerMask = defaultLayerMask & platformLayerMaskExclusion;
     }
 
     // Calculate this actor's current velocity

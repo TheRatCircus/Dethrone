@@ -26,7 +26,7 @@ public class DodgeController : MonoBehaviour
     // Awake is called when the script instance is being loaded
     private void Awake()
     {
-        dodgeManaCost = 33f;
+        dodgeManaCost = 25f;
     }
 
     // Start is called before the first frame update
@@ -42,7 +42,8 @@ public class DodgeController : MonoBehaviour
             actor = GetComponent<PlayerCharacterController>();
         }
         contactFilter.useTriggers = false;
-        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(14));
+        
+        contactFilter.SetLayerMask(Physics2D.GetLayerCollisionMask(LayerMask.NameToLayer("Ignore Other Actors")));
 
         isDodging = false;
     }
@@ -52,7 +53,7 @@ public class DodgeController : MonoBehaviour
     {
         if (isDodging)
         {
-            rb2d.position = Vector2.SmoothDamp(transform.position, dodgeDestination, ref currentVelocity, 0.07f);
+            rb2d.position += ((dodgeDestination - rb2d.position) * 3 * Time.deltaTime);
         }
     }
 
@@ -83,7 +84,7 @@ public class DodgeController : MonoBehaviour
             }
             else
             {
-                dodgeDestination = ray.GetPoint(3.0f);
+                dodgeDestination = ray.GetPoint(dodgeDirection.y > 0 ? 4 : 3);
             }
         }
     }
@@ -110,6 +111,7 @@ public class DodgeController : MonoBehaviour
         isDodging = true;
         actor.IsImmuneToHit = true;
         gameObject.layer = 14;
+        movementController.ResetLayerMask();
 
         yield return new WaitForSeconds(0.5f);
 
@@ -118,5 +120,11 @@ public class DodgeController : MonoBehaviour
         actor.CanCharacterAction = true;
         afterimage.Stop();
         gameObject.layer = 8;
+        movementController.ResetLayerMask();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(dodgeDestination, .2f);
     }
 }
