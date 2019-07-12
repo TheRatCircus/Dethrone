@@ -11,8 +11,11 @@ public class Health : MonoBehaviour
     public float _health { get => health; set => health = value; }
     public float HealthMax;
 
-    // Start is called before the first frame update
-    void Start()
+    private GameObject healthBar;
+    private GameObject healthBarContainer;
+    RectTransform healthBarTransform;
+
+    void Awake()
     {
         if (HealthMax <= 0)
         {
@@ -21,12 +24,30 @@ public class Health : MonoBehaviour
         health = HealthMax;
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        if (gameObject.tag != "Player")
+        {
+            healthBarContainer = gameObject.transform.Find("HealthBarContainer").gameObject;
+            healthBar = gameObject.transform.Find("HealthBarContainer/HealthBar").gameObject;
+            healthBarTransform = healthBar.GetComponent<RectTransform>();
+        }
+    }
+
     // Public health modifier function
     public void ChangeHealth(float healthChange)
     {
         health += healthChange;
         PopupManager.instance.HealthChangePopup(healthChange, transform);
         health = Mathf.Clamp(health, 0, HealthMax);
+
+        if (healthBar != null)
+        {
+            healthBarContainer.SetActive(true);
+            healthBarTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (health / HealthMax));
+        }
+
         CheckIfDead();
     }
 
