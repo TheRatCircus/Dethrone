@@ -4,27 +4,21 @@ using UnityEngine.UI;
 
 public class PopupManager : MonoBehaviour
 {
-    Text damagePopupPrefab;
-    Text[] damagePopup;
-
+    public GameObject damagePopupPrefab;
     public GameObject canvas;
+
+    public static PopupManager instance;
 
     // Start is called before the first frame update
     void Start()
     {
-        damagePopupPrefab = (Text)Resources.Load("Prefabs/HealthChangePopup", typeof(Text));
-
-        Health[] healths = (Health[])Resources.FindObjectsOfTypeAll(typeof(Health));
-        foreach (Health health in healths)
-        {
-            health.OnHealthChangeEvent += HealthChangePopup;
-        }
+        instance = this;
     }
 
     // Create a popup whenever an actor is healed or damaged
     public void HealthChangePopup(float healthChange, Transform target)
     {
-        Text popupText = Instantiate(damagePopupPrefab, target.position, new Quaternion(0, 0, 0, 0), canvas.transform);
+        Text popupText = Instantiate(damagePopupPrefab, target.position, new Quaternion(0, 0, 0, 0), canvas.transform).GetComponent<Text>();
         popupText.text = (-healthChange).ToString();
         if (healthChange == 0)
         {

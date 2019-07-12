@@ -4,7 +4,6 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     // Events
-    public event System.Action<float, Transform> OnHealthChangeEvent;
     public event System.Action OnDeathEvent;
 
     // Numeric fields
@@ -26,7 +25,7 @@ public class Health : MonoBehaviour
     public void ChangeHealth(float healthChange)
     {
         health += healthChange;
-        OnHealthChangeEvent?.Invoke(healthChange, transform);
+        PopupManager.instance.HealthChangePopup(healthChange, transform);
         health = Mathf.Clamp(health, 0, HealthMax);
         CheckIfDead();
     }

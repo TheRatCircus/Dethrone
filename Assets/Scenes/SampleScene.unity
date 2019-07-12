@@ -1342,6 +1342,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 338bf3862a077d1438835b57df2313b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damagePopupPrefab: {fileID: 2246028732025037207, guid: 027558ff55919c340835701f351164d3,
+    type: 3}
   canvas: {fileID: 2123085887}
 --- !u!114 &1347632550
 MonoBehaviour:
