@@ -6,17 +6,20 @@ using UnityEngine;
 public enum CastAnimation
 {
     None = 0,
-    Throw = 1
+    Throw = 1,
+    SabreSlash = 2
 }
 
 public abstract class Talent : Module
 {
     // Requisite objects
-    protected TargettingController targettingController;
     protected GameObject owner;
+    protected LandMovementController movementController;
+    protected SpriteRenderer spriteRenderer;
 
     protected int castAnimation;
     public int CastAnimation { get => castAnimation; set => castAnimation = value; }
+    protected Vector2 castPosition;
 
     // Inherent vars
     protected float manaCost;
@@ -31,44 +34,36 @@ public abstract class Talent : Module
     public bool CostsHealth { get => costsHealth; set => costsHealth = value; }
 
     // Status vars
-    protected bool isActive;
-    public bool IsActive { get => isActive; set => isActive = value; }
-    protected bool isTelegraphing;
-    public bool IsTelegraphing { get => isTelegraphing; set => isTelegraphing = value; }
-    protected bool isCasting;
-    public bool IsCasting { get => isCasting; set => isCasting = value; }
+    protected int talentStatus; // 0 inactive, 1 telegraphing, 2 casting
+    public int TalentStatus { get => talentStatus; }
 
-    public virtual void Initialize(TargettingController targettingController, GameObject owner)
+    public virtual void Initialize(GameObject owner)
     {
-        this.targettingController = targettingController;
         this.owner = owner;
+        movementController = owner.GetComponent<LandMovementController>();
+        spriteRenderer = owner.GetComponent<SpriteRenderer>();
     }
 
     // Cast this talent
     public virtual IEnumerator Cast()
     {
-        isActive = true;
-        isTelegraphing = true;
+        talentStatus = 1;
+        movementController.CanMove = false;
+        TelegraphEffect();
         yield return new WaitForSeconds(telegraphTime);
-
-        isTelegraphing = false;
-        isCasting = true;
+        talentStatus = 2;
         CastEffect();
         yield return new WaitForSeconds(castingTime);
-
-        isCasting = false;
-        isActive = false;
+        talentStatus = 0;
+        movementController.CanMove = true;
     }
+
+    // This talent's effect upon starting to telegraph
+    protected virtual void TelegraphEffect() { }
 
     // This talent's effect upon being cast
-    protected virtual void CastEffect()
-    {
-
-    }
+    protected virtual void CastEffect() { }
 
     // This talent's emission behaviour
-    protected virtual void Emit()
-    {
-
-    }
+    protected virtual void Emit() { }
 }

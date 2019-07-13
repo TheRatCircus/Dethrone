@@ -6,7 +6,6 @@ public class DodgeController : MonoBehaviour
 {
     // Requisite objects
     private Actor actor;
-    private TargettingController targettingController;
     public LandMovementController movementController;
     private Collider2D thisCollider;
     private Rigidbody2D rb2d;
@@ -32,7 +31,6 @@ public class DodgeController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        targettingController = GetComponent<TargettingController>();
         thisCollider = GetComponent<Collider2D>();
         rb2d = GetComponent<Rigidbody2D>();
         mana = GetComponent<Mana>();

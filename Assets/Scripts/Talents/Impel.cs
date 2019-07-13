@@ -1,12 +1,10 @@
-﻿// Impel: Throw the user's weapon in an arc
-using System.Collections;
+﻿// Impel: Throw the user's weapon
 using UnityEngine;
 
 namespace Dethrone.Talents
 {
     public class Impel : Talent
     {
-        float range = .5f;
         float damage = 20f;
         GameObject prefab;
         GameObject impelGameObject;
@@ -23,32 +21,18 @@ namespace Dethrone.Talents
             castingTime = 0.1f;
         }
 
-        // Cast this talent
-        public override IEnumerator Cast()
-        {
-            isActive = true;
-            isTelegraphing = true;
-            yield return new WaitForSeconds(telegraphTime);
-
-            isTelegraphing = false;
-            isCasting = true;
-            CastEffect();
-            impelProj.EnableProjectile(true);
-            yield return new WaitForSeconds(castingTime);
-
-            isCasting = false;
-            isActive = false;
-        }
-
         // This talent's effect upon being cast
         protected override void CastEffect() => Emit();
 
         // This talent's emission behaviour
         protected override void Emit()
         {
-            impelGameObject = Instantiate(prefab, targettingController.GetOrbitPoint(range), targettingController.AimRotation);
+            castPosition = owner.transform.position;
+            castPosition.x += spriteRenderer.flipX ? -.5f : .5f;
+            impelGameObject = Instantiate(prefab, castPosition, new Quaternion());
             impelProj = impelGameObject.GetComponent<Emissions.Impel>();
-            impelProj.Initialize(damage, targettingController.AimDirection, 512f);
+            impelProj.Initialize(damage, spriteRenderer.flipX ? Vector2.left : Vector2.right, 512f);
+            impelProj.EnableProjectile(true);
             Destroy(impelGameObject, impelProj.Lifetime);
         }
     }

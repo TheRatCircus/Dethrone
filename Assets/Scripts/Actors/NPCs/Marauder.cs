@@ -27,7 +27,6 @@ namespace Dethrone.NPCs
     public class Marauder : Actor
     {
         // Requisite scripts
-        protected TargettingController targettingController;
         protected LandMovementController movementController;
 
         protected Slash slash;
@@ -56,7 +55,7 @@ namespace Dethrone.NPCs
         protected float sqrDstToTarget;
 
         // Awake is called when the script instance is being loaded
-        protected void Awake()
+        protected override void Awake()
         {
             npcState = NPCState.WaitingForPlayer;
             //combatState = CombatState.None;
@@ -69,7 +68,6 @@ namespace Dethrone.NPCs
         {
             base.Start();
             movementController = GetComponent<LandMovementController>();
-            targettingController = GetComponent<TargettingController>();
 
             if (target == null)
             {
@@ -77,7 +75,7 @@ namespace Dethrone.NPCs
             }
 
             slash = ScriptableObject.CreateInstance<Slash>();
-            slash.Initialize(targettingController, gameObject);
+            slash.Initialize(gameObject);
             slash.TelegraphTime = .75f;
 
             StartCoroutine(ScanForTarget());
@@ -88,11 +86,6 @@ namespace Dethrone.NPCs
         {
             eyePosition = transform.position;
             eyePosition.y += .5f;
-
-            if (npcState == NPCState.Combat)
-            {
-                targettingController.CatchPointer(target.transform.position);
-            }
 
             sqrDstToTarget = (target.transform.position - transform.position).sqrMagnitude;
         }
@@ -178,12 +171,6 @@ namespace Dethrone.NPCs
                 target.transform.position.x <= (transform.position.x + positionalDiffTolerance))
             {
                 movementController.SetMove(0);
-                //If the target is within the same x but higher, try jumping
-                if (!TargetWithinDistance(attackRange)
-                    && target.transform.position.y > transform.position.y)
-                {
-                    movementController.StartCoroutine(movementController.ControlledJump());
-                }
             }
             else if (target.transform.position.x > transform.position.x)
             {
@@ -202,7 +189,7 @@ namespace Dethrone.NPCs
         {
             movementController.SetMove(0);
             StartCoroutine(slash.Cast());
-            while (slash.IsActive)
+            while (slash.TalentStatus != 0)
             {
                 yield return null;
             }

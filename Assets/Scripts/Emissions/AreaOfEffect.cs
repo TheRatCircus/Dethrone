@@ -5,16 +5,16 @@ namespace Dethrone.Emissions
 {
     public class AreaOfEffect : MonoBehaviour
     {
-        // Requisite components
+        // Requisite objects
         private Animator animator;
 
+        // Talent behaviour
         private bool dealsKnockback;
         protected float damage;
 
         // Status vars
-        protected bool isActive;
-        protected bool isTelegraphing;
-        protected bool isAffecting;
+        protected int aoeStatus;
+        public int _aoeStatus { get => aoeStatus; set => aoeStatus = value; }
 
         // Start is called before the first frame update
         void Start()
@@ -25,30 +25,14 @@ namespace Dethrone.Emissions
         // Update is called once per frame
         void Update()
         {
-            animator.SetBool("isActive", isActive);
-            animator.SetBool("isAffecting", isAffecting);
-            animator.SetBool("isTelegraphing", isTelegraphing);
+            animator.SetInteger("aoeStatus", aoeStatus);
         }
 
         // Call on instantiation to pass Talent behaviour to this AOE
         public virtual void Initialize(float damage, GameObject owner)
         {
             this.damage = damage;
-            if (owner.tag == "Player")
-            {
-                gameObject.layer = 9;
-            }
-            else
-            {
-                gameObject.layer = 15;
-            }
-        }
-
-        public virtual void SetStatus(bool isActive, bool isTelegraphing, bool isAffecting)
-        {
-            this.isActive = isActive;
-            this.isTelegraphing = isTelegraphing;
-            this.isAffecting = isAffecting;
+            gameObject.layer = (owner.tag == "Player" ? 9 : 15);
         }
 
         // Turn this AOE into a trigger
@@ -83,12 +67,6 @@ namespace Dethrone.Emissions
         protected void DamageActor(Health health)
         {
             health.ChangeHealth(-damage);
-        }
-
-        // Destroy this area of effect
-        public void DestroyAOE()
-        {
-            Destroy(transform.gameObject);
         }
     }
 

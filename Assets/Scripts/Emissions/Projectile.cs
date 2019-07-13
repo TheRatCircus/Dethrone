@@ -6,6 +6,7 @@ namespace Dethrone.Emissions
     public class Projectile : MonoBehaviour
     {
         public GameObject onDeathEffect;
+        public Rigidbody2D rb2d;
 
         protected float lifetime;
         public float Lifetime { get => lifetime; }

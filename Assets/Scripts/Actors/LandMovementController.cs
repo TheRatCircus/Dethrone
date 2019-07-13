@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LandMovementController : PhysicsObject
 {
-    private TargettingController targettingController;
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     private BoxCollider2D thisCollider;
@@ -12,6 +11,8 @@ public class LandMovementController : PhysicsObject
     public float maxSpeed = 7;
     public float jumpTakeOffSpeed = 7;
 
+    private bool canMove;
+    public bool CanMove { get => canMove; set => canMove = value; }
     private Vector2 move;
     private float moveInput;
     private bool isJumping;
@@ -31,12 +32,13 @@ public class LandMovementController : PhysicsObject
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         thisCollider = GetComponent<BoxCollider2D>();
-        targettingController = GetComponent<TargettingController>();
 
         contactFilter.useTriggers = false;
         emissionLayerMaskExclusion = ~LayerMask.GetMask("Ignore Player", "Ignore NPCs");
         platformLayerMaskExclusion = ~LayerMask.GetMask("Platform");
         ResetLayerMask();
+
+        canMove = true;
     }
 
     // Set the current horizontal move. Call every frame
@@ -75,7 +77,10 @@ public class LandMovementController : PhysicsObject
     {
         // Start move at zero, then feed input from external controller
         Vector2 move = Vector2.zero;
-        move.x = moveInput;
+        if (canMove)
+        {
+            move.x = moveInput;
+        }
 
         if (isJumping && grounded)
         {
@@ -85,17 +90,21 @@ public class LandMovementController : PhysicsObject
         {
             if (velocity.y > 0)
             {
-                velocity.y *= 0.5f;
+                velocity.y *= .5f;
             }
         }
 
-        bool flipSprite = 
-        (spriteRenderer.flipX ?
-        (targettingController.GlobalPointer.x > transform.position.x) :
-        (targettingController.GlobalPointer.x < transform.position.x));
-        if (flipSprite)
+        if (move.x > .01f)
         {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
+            spriteRenderer.flipX = false;
+        }
+        else if (move.x < -.01f)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else
+        {
+            // Do nothing
         }
 
         animator.SetBool("grounded", grounded);

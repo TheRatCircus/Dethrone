@@ -7,7 +7,6 @@ public class PlayerCharacterController : Actor
     private Vector2 pointerPosition;
 
     // Scripts receiving input
-    private TargettingController targettingController;
     private DodgeController playerDodge;
     private PlayerTalentController playerTalentController;
     private LandMovementController playerMovementController;
@@ -24,7 +23,6 @@ public class PlayerCharacterController : Actor
             cam = Camera.main;
         }
 
-        targettingController = GetComponent<TargettingController>();
         playerDodge = GetComponent<DodgeController>();
         playerTalentController = GetComponent<PlayerTalentController>();
         playerMovementController = GetComponent<LandMovementController>();
@@ -48,7 +46,6 @@ public class PlayerCharacterController : Actor
             Vector2 newPointerPos = pointerPosition += new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             pointerPosition += newPointerPos;
         }
-        targettingController.CatchPointer(pointerPosition);
 
         if (canCharacterAction)
         {

@@ -6,7 +6,6 @@ using Dethrone.Talents;
 public class PlayerTalentController : MonoBehaviour
 {
     // Requisite objects
-    protected TargettingController targettingController;
     protected Animator animator;
     protected Mana mana;
     protected Health health;
@@ -16,44 +15,33 @@ public class PlayerTalentController : MonoBehaviour
     private Talent[] secondaryTalents;
 
     // Status vars
-    protected bool isTelegraphing;
-    protected bool isActive;
-    protected bool isCasting;
+    protected int talentStatus;
 
     // Start is called before the first frame update
     void Start()
     {
-        targettingController = GetComponent<TargettingController>();
         animator = GetComponent<Animator>();
         mana = GetComponent<Mana>();
         health = GetComponent<Health>();
 
         // TEMPORARY
         primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>(), ScriptableObject.CreateInstance<Impel>() };
-        primaryTalents[0].Initialize(targettingController, gameObject);
-        primaryTalents[1].Initialize(targettingController, gameObject);
+        primaryTalents[0].Initialize(gameObject);
+        primaryTalents[1].Initialize(gameObject);
     }
 
     // Update is called once per frame
     void Update()
     {
-        animator.SetBool("isTelegraphing", isTelegraphing);
-        animator.SetBool("isCasting", isCasting);
+        animator.SetInteger("talentStatus", talentStatus);
     }
 
     // Catch input attempting to cast a Talent
     public void TryCast(int talent, bool secondary)
     {
-        if (!isActive)
+        if (talentStatus == 0)
         {
-            if (!secondary)
-            {
-                TryCastTalent(primaryTalents[talent]);
-            }
-            else
-            {
-                TryCastTalent(secondaryTalents[talent]);
-            }
+            TryCastTalent(!secondary ? primaryTalents[talent] : secondaryTalents[talent]);
         }
         else
         {
@@ -86,19 +74,16 @@ public class PlayerTalentController : MonoBehaviour
     // Read Talent status for use in own status
     IEnumerator OnCast(Talent talent)
     {
-        isActive = true;
-        isTelegraphing = true;
-        while(talent.IsTelegraphing)
+        talentStatus = talent.TalentStatus;
+        while(talent.TalentStatus == 1)
         {
             yield return null;
         }
-        isTelegraphing = false;
-        isCasting = true;
-        while(talent.IsCasting)
+        talentStatus = talent.TalentStatus;
+        while(talent.TalentStatus == 2 )
         {
             yield return null;
         }
-        isCasting = false;
-        isActive = false;
+        talentStatus = talent.TalentStatus;
     }
 }
