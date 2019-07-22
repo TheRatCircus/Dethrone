@@ -11,11 +11,23 @@ public class PlayerTalentController : MonoBehaviour
     protected Health health;
 
     // Talent sets
-    private Talent[] primaryTalents;
-    private Talent[] secondaryTalents;
+    private Combo[] primaryTalents;
+    private Combo[] secondaryTalents;
+
+    // A singleton is used to call coroutines in ScriptableObjecets owned by
+    // this class
+    public static PlayerTalentController instance;
 
     // Status vars
-    protected int talentStatus;
+    protected int playerTalentStatus; // 0 inactive, 1 telegraphing, 2 casting
+    protected bool bufferedInput;
+    protected Combo activeCombo;
+
+    // Awake is called when the script instance is being loaded
+    private void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -25,65 +37,60 @@ public class PlayerTalentController : MonoBehaviour
         health = GetComponent<Health>();
 
         // TEMPORARY
-        primaryTalents = new Talent[] { ScriptableObject.CreateInstance<Slash>(), ScriptableObject.CreateInstance<Impel>() };
-        primaryTalents[0].Initialize(gameObject);
-        primaryTalents[1].Initialize(gameObject);
+        primaryTalents = new Combo[] { ScriptableObject.CreateInstance<Combo>() };
+        primaryTalents[0].ComboTalents.Add(ScriptableObject.CreateInstance<Slash>());
+        primaryTalents[0].ComboTalents.Add(ScriptableObject.CreateInstance<Slash>());
+        primaryTalents[0].ComboTalents.Add(ScriptableObject.CreateInstance<Impel>());
+        foreach (Talent talent in primaryTalents[0].ComboTalents)
+        {
+            talent.Initialize(gameObject);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        animator.SetInteger("talentStatus", talentStatus);
-    }
-
-    // Catch input attempting to cast a Talent
-    public void TryCast(int talent, bool secondary)
-    {
-        if (talentStatus == 0)
+        if (activeCombo != null && activeCombo.activeTalent != null)
         {
-            TryCastTalent(!secondary ? primaryTalents[talent] : secondaryTalents[talent]);
+            playerTalentStatus = activeCombo.activeTalent.TalentStatus;
         }
-        else
+        animator.SetInteger("talentStatus", playerTalentStatus);
+        if (bufferedInput)
         {
-            Debug.Log("Cast failed: another talent is already casting.");
-        }
-    }
-
-    // Attempt to cast a specific Talent, checking all prerequisites on way
-    public void TryCastTalent(Talent talent)
-    {
-        if (talent.ManaCost <= (talent.CostsHealth ? health._health : mana._mana))
-        {
-            CastTalent(talent);
-        }
-        else
-        {
-            Debug.Log($"Insufficient {(talent.CostsHealth ? "health" : "mana")}.");
+            if (playerTalentStatus == (int)TalentStatus.Inactive ||
+            playerTalentStatus == (int)TalentStatus.Combo)
+            {
+                TryCastTalent(activeCombo);
+                bufferedInput = false;
+            }
         }
     }
 
-    // Finally go through the process of casting the talent
-    public void CastTalent(Talent talent)
+    // Buffer incoming input to cast a Talent
+    public void BufferInput(int talent, bool secondary)
     {
-        animator.SetInteger("castAnimation", talent.CastAnimation);
-        StartCoroutine(talent.Cast());
-        StartCoroutine(OnCast(talent));
-        mana.ModifyMana(-talent.ManaCost, talent.CostsHealth);
+        if (playerTalentStatus != (int)TalentStatus.Telegraphing)
+        {
+            bufferedInput = true;
+            activeCombo = (!secondary ? primaryTalents[talent] : secondaryTalents[talent]);
+        }
     }
 
-    // Read Talent status for use in own status
-    IEnumerator OnCast(Talent talent)
+    // Check if all prerequisites for casting this Talent are met
+    bool CanCastTalent(Combo combo)
     {
-        talentStatus = talent.TalentStatus;
-        while(talent.TalentStatus == 1)
+        return combo.ComboTalents[combo.Current].ManaCost <=
+            (combo.ComboTalents[combo.Current].CostsHealth ? health._health : mana._mana);
+    }
+
+    // Attempt to cast a specific Talent
+    public void TryCastTalent(Combo combo)
+    {
+        if (CanCastTalent(combo))
         {
-            yield return null;
+            Talent t = combo.ComboCast();
+            animator.SetInteger("castAnimation", !combo.IsRepeating() ? t.CastAnimation.alt : t.CastAnimation.normal);
+            mana.ModifyMana(-t.ManaCost, t.CostsHealth);
         }
-        talentStatus = talent.TalentStatus;
-        while(talent.TalentStatus == 2 )
-        {
-            yield return null;
-        }
-        talentStatus = talent.TalentStatus;
     }
 }

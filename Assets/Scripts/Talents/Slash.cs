@@ -14,25 +14,28 @@ namespace Dethrone.Talents
         void Awake()
         {
             moduleName = "Slash";
-            castAnimation = (int)global::CastAnimation.SabreSlash;
+            castAnimation.normal = (int)global::CastAnimation.SlashSabre;
+            castAnimation.alt = (int)global::CastAnimation.SlashSabreAlternate;
             prefab = (GameObject)Resources.Load("Prefabs/Slash", typeof(GameObject));
             manaCost = 20;
-            telegraphTime = .25f;
-            castingTime = .25f;
+            timing.longTelegraphTime = .25f;
+            timing.shortTelegraphTime = .15f;
+            timing.castingTime = .25f;
+            timing.comboTime = .75f;
         }
 
         // This talent's effect upon starting to telegraph
-        protected override void TelegraphEffect() => Emit();
+        protected override void TelegraphEffect(bool repeat) => Emit(repeat);
 
         // This talent's effect upon being cast
-        protected override void CastEffect()
+        protected override void CastEffect(bool repeat)
         {
             slashAOE._aoeStatus = talentStatus;
             slashAOE.EnableAOE(true);
         }
 
         // This talent's emission behaviour
-        protected override void Emit()
+        protected override void Emit(bool repeat)
         {
             castPosition = owner.transform.position;
             castPosition.x += spriteRenderer.flipX ? -.5f : .5f;
@@ -42,9 +45,19 @@ namespace Dethrone.Talents
                 slashGameObject.GetComponent<SpriteRenderer>().flipX = true;
             }
             slashAOE = slashGameObject.GetComponent<Emissions.Slash>();
-            slashAOE.Initialize(damage, owner);
+            slashAOE.Initialize(damage, owner, repeat);
             slashAOE._aoeStatus = talentStatus;
-            Destroy(slashGameObject, telegraphTime + castingTime);
+        }
+
+        protected override void CloseEffect()
+        {
+            Destroy(slashGameObject);
+        }
+
+        public override void KillTalent()
+        {
+            base.KillTalent();
+            Destroy(slashGameObject);
         }
     }
 }

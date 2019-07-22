@@ -20,7 +20,7 @@ public class Mana : MonoBehaviour
     // Awake is called when the script instance is being loaded
     private void Awake()
     {
-        manaMax = 100;
+        manaMax = 200;
         manaRegenRate = 25;
         mana = manaMax;
         manaRegenDelay = 1.0f;

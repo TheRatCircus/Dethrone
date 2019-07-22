@@ -82,6 +82,7 @@ public class PlayerCharacterController : Actor
         {
             playerMovementController.SetJumping(Input.GetButtonUp("Jump"));
         }
+        
     }
 
     // Catch input activating dodge
@@ -159,19 +160,23 @@ public class PlayerCharacterController : Actor
 
         if (Input.GetButtonDown("Talent1"))
         {
-            playerTalentController.TryCast(0, secondaryInput);
+            //playerTalentController.TryCast(0, secondaryInput);
+            playerTalentController.BufferInput(0, secondaryInput);
         }
         else if (Input.GetButtonDown("Talent2"))
         {
-            playerTalentController.TryCast(1, secondaryInput);
+            //playerTalentController.TryCast(1, secondaryInput);
+            playerTalentController.BufferInput(1, secondaryInput);
         }
         else if (Input.GetButtonDown("Talent3"))
         {
-            playerTalentController.TryCast(2, secondaryInput);
+            //playerTalentController.TryCast(2, secondaryInput);
+            playerTalentController.BufferInput(2, secondaryInput);
         }
         else if (Input.GetButtonDown("Talent4"))
         {
-            playerTalentController.TryCast(3, secondaryInput);
+            //playerTalentController.TryCast(3, secondaryInput);
+            playerTalentController.BufferInput(3, secondaryInput);
         }
     }
 }

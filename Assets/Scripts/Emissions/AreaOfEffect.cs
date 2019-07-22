@@ -8,6 +8,8 @@ namespace Dethrone.Emissions
         // Requisite objects
         private Animator animator;
 
+        bool alternate;
+
         // Talent behaviour
         private bool dealsKnockback;
         protected float damage;
@@ -20,6 +22,7 @@ namespace Dethrone.Emissions
         void Start()
         {
             animator = GetComponent<Animator>();
+            animator.SetBool("alternate", alternate);
         }
 
         // Update is called once per frame
@@ -29,9 +32,10 @@ namespace Dethrone.Emissions
         }
 
         // Call on instantiation to pass Talent behaviour to this AOE
-        public virtual void Initialize(float damage, GameObject owner)
+        public virtual void Initialize(float damage, GameObject owner, bool alternate)
         {
             this.damage = damage;
+            this.alternate = alternate;
             gameObject.layer = (owner.tag == "Player" ? 9 : 15);
         }
 

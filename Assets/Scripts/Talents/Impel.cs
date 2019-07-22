@@ -14,18 +14,21 @@ namespace Dethrone.Talents
         void Awake()
         {
             moduleName = "Impel";
-            castAnimation = (int)global::CastAnimation.Throw;
+            castAnimation.normal = (int)global::CastAnimation.Throw;
+            castAnimation.alt = (int)global::CastAnimation.Throw;
             prefab = (GameObject)Resources.Load("Prefabs/ThrowingAxe", typeof(GameObject));
             manaCost = 20f;
-            telegraphTime = 0.25f;
-            castingTime = 0.1f;
+            timing.longTelegraphTime = .25f;
+            timing.shortTelegraphTime = .15f;
+            timing.castingTime = .1f;
+            timing.comboTime = .75f;
         }
 
         // This talent's effect upon being cast
-        protected override void CastEffect() => Emit();
+        protected override void CastEffect(bool combo) => Emit(combo);
 
         // This talent's emission behaviour
-        protected override void Emit()
+        protected override void Emit(bool combo)
         {
             castPosition = owner.transform.position;
             castPosition.x += spriteRenderer.flipX ? -.5f : .5f;

@@ -76,7 +76,7 @@ namespace Dethrone.NPCs
 
             slash = ScriptableObject.CreateInstance<Slash>();
             slash.Initialize(gameObject);
-            slash.TelegraphTime = .75f;
+            slash.LongTelegraphTime = .75f;
 
             StartCoroutine(ScanForTarget());
         }
@@ -188,7 +188,7 @@ namespace Dethrone.NPCs
         IEnumerator Attack()
         {
             movementController.SetMove(0);
-            StartCoroutine(slash.Cast());
+            StartCoroutine(slash.Cast(false, false));
             while (slash.TalentStatus != 0)
             {
                 yield return null;
